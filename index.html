@@ -1,479 +1,1712 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pro Trades Academy - HVAC Diagnostic OS</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.359.0/umd/lucide.min.js"></script>
-    <style>
-        :root {
-            --bg-dark: #0f172a;
-            --panel-dark: #1e293b;
-            --safety-orange: #f97316;
-            --electric-blue: #3b82f6;
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --terminal-green: #22c55e;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, viewport-fit=cover" />
+  <title>Pro Trades Academy - HVAC Diagnostic OS</title>
+  <style>
+    :root {
+      --bg-dark: #0f172a;
+      --bg-deep: #020617;
+      --panel-dark: #1e293b;
+      --panel-soft: rgba(30, 41, 59, 0.88);
+      --panel-card: rgba(15, 23, 42, 0.94);
+      --safety-orange: #FF5722;
+      --electric-blue: #00b2ff;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --terminal-green: #22c55e;
+      --warning: #facc15;
+      --danger: #fb7185;
+      --line: rgba(255, 255, 255, 0.1);
+      --line-strong: rgba(255, 255, 255, 0.18);
+      --shadow: 0 22px 70px rgba(0, 0, 0, 0.48);
+      --radius-xl: 28px;
+      --radius-lg: 20px;
+      --radius-md: 15px;
+      --safe-bottom: env(safe-area-inset-bottom, 0px);
+      --safe-top: env(safe-area-inset-top, 0px);
+    }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            -webkit-tap-highlight-color: transparent;
-        }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            padding-bottom: 70px;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      overflow-x: hidden;
+      background:
+        radial-gradient(circle at 82% 0%, rgba(0, 178, 255, 0.18), transparent 32%),
+        radial-gradient(circle at 14% 14%, rgba(255, 87, 34, 0.18), transparent 35%),
+        linear-gradient(180deg, #020617 0%, #0f172a 48%, #020617 100%);
+      color: var(--text-main);
+    }
 
-        header {
-            background-color: var(--panel-dark);
-            padding: 1rem;
-            border-bottom: 2px solid var(--safety-orange);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-            z-index: 50;
-        }
+    body {
+      max-width: 480px;
+      margin: 0 auto;
+      border-left: 1px solid rgba(255, 255, 255, 0.05);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 0 0 80px rgba(0, 0, 0, 0.55);
+    }
 
-        .logo-container h1 {
-            font-size: 1.1rem;
-            font-weight: 800;
-            letter-spacing: 0.5px;
-        }
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit;
+    }
 
-        .logo-container span {
-            color: var(--safety-orange);
-        }
+    button {
+      border: 0;
+      cursor: pointer;
+    }
 
-        .status-badge {
-            background: rgba(34, 197, 94, 0.1);
-            color: var(--terminal-green);
-            padding: 0.25rem 0.5rem;
-            border-radius: 4px;
-            font-size: 0.75rem;
-            font-family: monospace;
-            border: 1px solid var(--terminal-green);
-        }
+    #splash-screen {
+      position: fixed;
+      inset: 0;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      padding: calc(38px + var(--safe-top)) 20px calc(34px + var(--safe-bottom));
+      background:
+        radial-gradient(circle at 50% 34%, rgba(255, 87, 34, 0.22), transparent 28%),
+        radial-gradient(circle at 50% 56%, rgba(0, 178, 255, 0.14), transparent 35%),
+        linear-gradient(180deg, #111827 0%, #020617 100%);
+      transition: opacity 0.45s ease, transform 0.45s ease;
+    }
 
-        main {
-            padding: 1rem;
-            flex-grow: 1;
-            max-width: 600px;
-            margin: 0 auto;
-            width: 100%;
-        }
+    #splash-screen.hidden {
+      opacity: 0;
+      transform: scale(1.02);
+      pointer-events: none;
+    }
 
-        .app-view {
-            display: none;
-        }
+    .portal-glow {
+      position: absolute;
+      top: 19%;
+      width: 330px;
+      height: 330px;
+      border-radius: 999px;
+      background: radial-gradient(circle, rgba(255, 87, 34, 0.18) 0%, rgba(0, 178, 255, 0.07) 42%, transparent 72%);
+      animation: portalPulse 3s infinite ease-in-out;
+    }
 
-        .app-view.active {
-            display: block;
-        }
+    @keyframes portalPulse {
+      0%, 100% { transform: scale(0.94); opacity: 0.72; }
+      50% { transform: scale(1.14); opacity: 1; }
+    }
 
-        .card {
-            background-color: var(--panel-dark);
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 1rem;
-            border: 1px solid #334155;
-        }
+    .brand-header,
+    .center-graphic,
+    .parent-brand {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
 
-        .card-title {
-            font-size: 1rem;
-            color: var(--text-muted);
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-transform: uppercase;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-        }
+    .splash-logo {
+      width: 74px;
+      height: 74px;
+      margin: 0 auto 15px;
+      display: grid;
+      place-items: center;
+      border-radius: 24px;
+      background:
+        linear-gradient(145deg, var(--safety-orange), #bf360c),
+        radial-gradient(circle at 25% 20%, rgba(255, 255, 255, 0.45), transparent 34%);
+      color: #07101e;
+      font-weight: 950;
+      font-size: 24px;
+      letter-spacing: -0.08em;
+      box-shadow: 0 16px 44px rgba(255, 87, 34, 0.25);
+    }
 
-        /* Calculator View Styles */
-        .grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
+    .brand-title {
+      font-size: 2.05rem;
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      line-height: 0.95;
+      color: var(--text-main);
+    }
 
-        .input-group {
-            margin-bottom: 1rem;
-        }
+    .brand-subtitle {
+      margin-top: 10px;
+      font-size: 0.78rem;
+      color: var(--safety-orange);
+      font-weight: 850;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+    }
 
-        .input-group label {
-            display: block;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            margin-bottom: 0.35rem;
-        }
+    .power-ring {
+      width: 132px;
+      height: 132px;
+      border-radius: 999px;
+      border: 3px dashed var(--safety-orange);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 30px rgba(255, 87, 34, 0.2), inset 0 0 34px rgba(0, 178, 255, 0.08);
+      animation: spin 18s linear infinite;
+    }
 
-        .input-group input, .input-group select {
-            width: 100%;
-            background-color: var(--bg-dark);
-            border: 1px solid #475569;
-            color: var(--text-main);
-            padding: 0.75rem;
-            border-radius: 6px;
-            font-size: 1rem;
-            outline: none;
-        }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
 
-        .input-group input:focus {
-            border-color: var(--electric-blue);
-        }
+    .power-core {
+      width: 74px;
+      height: 74px;
+      border-radius: 999px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(145deg, rgba(0, 178, 255, 0.95), rgba(0, 72, 115, 0.92));
+      box-shadow: 0 0 30px rgba(0, 178, 255, 0.32);
+      animation: counterSpin 18s linear infinite;
+      font-size: 30px;
+    }
 
-        .btn {
-            width: 100%;
-            background-color: var(--safety-orange);
-            color: white;
-            border: none;
-            padding: 0.85rem;
-            border-radius: 6px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: opacity 0.2s;
-        }
+    @keyframes counterSpin {
+      to { transform: rotate(-360deg); }
+    }
 
-        .btn-blue {
-            background-color: var(--electric-blue);
-        }
+    .center-graphic p {
+      color: var(--text-muted);
+      font-size: 0.78rem;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      font-weight: 750;
+    }
 
-        .results-box {
-            background: rgba(59, 130, 246, 0.05);
-            border: 1px dashed var(--electric-blue);
-            border-radius: 6px;
-            padding: 1rem;
-            margin-top: 1rem;
-        }
+    .portal-btn {
+      position: relative;
+      z-index: 2;
+      width: min(320px, 100%);
+      min-height: 56px;
+      border-radius: 999px;
+      color: white;
+      background: linear-gradient(135deg, var(--safety-orange), #c2410c);
+      font-weight: 950;
+      letter-spacing: 0.08em;
+      box-shadow: 0 16px 40px rgba(255, 87, 34, 0.36);
+      transition: transform 0.18s ease;
+    }
 
-        .result-row {
-            display: flex;
-            justify-content: space-between;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #334155;
-        }
+    .portal-btn:active,
+    .btn:active,
+    .nav-item:active,
+    .icon-btn:active,
+    .small-action:active {
+      transform: scale(0.97);
+    }
 
-        .result-row:last-child {
-            border-bottom: none;
-        }
+    .parent-brand {
+      color: var(--text-muted);
+      font-size: 0.72rem;
+      line-height: 1.55;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+    }
 
-        /* LiDAR Scanner View Styles */
-        .scanner-viewport {
-            height: 220px;
-            background: #020617;
-            border-radius: 6px;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid #334155;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
+    .parent-brand strong {
+      color: var(--electric-blue);
+    }
 
-        .laser-line {
-            position: absolute;
-            width: 100%;
-            height: 2px;
-            background: var(--electric-blue);
-            box-shadow: 0 0 12px var(--electric-blue);
-            top: 0;
-            animation: scan 3s infinite linear;
-            display: none;
-        }
+    #main-app {
+      display: none;
+      opacity: 0;
+      min-height: 100vh;
+      min-height: 100dvh;
+      padding: calc(12px + var(--safe-top)) 14px calc(92px + var(--safe-bottom));
+      transition: opacity 0.35s ease;
+    }
 
-        @keyframes scan {
-            0% { top: 0%; }
-            50% { top: 100%; }
-            100% { top: 0%; }
-        }
+    #main-app.active {
+      display: block;
+      opacity: 1;
+    }
 
-        .point-cloud {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            opacity: 0.3;
-            background-image: radial-gradient(var(--electric-blue) 1px, transparent 1px);
-            background-size: 12px 12px;
-            display: none;
-        }
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      padding: 8px 0 12px;
+      backdrop-filter: blur(16px);
+    }
 
-        /* Terminal Console */
-        .terminal {
-            background-color: #020617;
-            font-family: monospace;
-            padding: 0.75rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            color: var(--terminal-green);
-            height: 120px;
-            overflow-y: auto;
-            border: 1px solid #1e293b;
-        }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
 
-        /* Pitch Deck View Styles */
-        .pitch-slide {
-            padding: 0.5rem;
-        }
+    .logo-mark {
+      width: 45px;
+      height: 45px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      flex: 0 0 auto;
+      background: linear-gradient(145deg, var(--safety-orange), #bf360c);
+      color: #06101f;
+      font-weight: 950;
+      letter-spacing: -0.08em;
+      box-shadow: 0 12px 30px rgba(255, 87, 34, 0.23);
+    }
 
-        .pitch-slide h2 {
-            color: var(--safety-orange);
-            font-size: 1.3rem;
-            margin-bottom: 0.75rem;
-        }
+    .brand-title-shell {
+      min-width: 0;
+    }
 
-        .pitch-slide p {
-            color: var(--text-muted);
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
+    .brand-title-shell strong {
+      display: block;
+      color: var(--text-main);
+      font-size: 14px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      letter-spacing: -0.02em;
+    }
 
-        .highlight-box {
-            background: rgba(249, 115, 22, 0.05);
-            border-left: 4px solid var(--safety-orange);
-            padding: 0.75rem;
-            margin: 1rem 0;
-            font-weight: 600;
-        }
+    .brand-title-shell span {
+      display: block;
+      margin-top: 3px;
+      color: var(--text-muted);
+      font-size: 11px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        /* Navigation Bar */
-        nav {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: var(--panel-dark);
-            border-top: 1px solid #334155;
-            display: flex;
-            justify-content: space-around;
-            padding: 0.5rem 0;
-            z-index: 100;
-        }
+    .icon-btn {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      color: var(--text-main);
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--line);
+      font-size: 19px;
+    }
 
-        .nav-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            color: var(--text-muted);
-            background: none;
-            border: none;
-            font-size: 0.75rem;
-            cursor: pointer;
-            width: 25%;
-            gap: 0.25rem;
-        }
+    .app-view {
+      display: none;
+      animation: fadeUp 0.24s ease both;
+    }
 
-        .nav-item.active {
-            color: var(--safety-orange);
-        }
-    </style>
+    .app-view.active {
+      display: block;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .hero {
+      position: relative;
+      overflow: hidden;
+      border-radius: var(--radius-xl);
+      padding: 18px;
+      background:
+        radial-gradient(circle at 92% 12%, rgba(0, 178, 255, 0.31), transparent 36%),
+        linear-gradient(150deg, rgba(30, 41, 59, 0.98), rgba(2, 6, 23, 0.96));
+      border: 1px solid var(--line-strong);
+      box-shadow: var(--shadow);
+    }
+
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(110deg, rgba(255, 255, 255, 0.11), transparent 28%, transparent 65%, rgba(255, 87, 34, 0.16));
+      pointer-events: none;
+      opacity: 0.42;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 1;
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      padding: 7px 10px;
+      border-radius: 999px;
+      background: rgba(0, 178, 255, 0.13);
+      color: #c8f3ff;
+      border: 1px solid rgba(0, 178, 255, 0.25);
+      font-size: 11px;
+      font-weight: 850;
+      letter-spacing: 0.02em;
+    }
+
+    .pulse {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--terminal-green);
+      box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5);
+      animation: pulse 1.7s infinite;
+    }
+
+    @keyframes pulse {
+      0% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.5); }
+      70% { box-shadow: 0 0 0 9px rgba(34, 197, 94, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0); }
+    }
+
+    .hero h1 {
+      margin: 14px 0 8px;
+      font-size: clamp(29px, 8.2vw, 38px);
+      line-height: 0.98;
+      letter-spacing: -0.07em;
+    }
+
+    .hero p {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.45;
+      max-width: 320px;
+    }
+
+    .scan-action {
+      margin-top: 16px;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 50px;
+      border-radius: 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      color: white;
+      background: linear-gradient(135deg, var(--safety-orange), #c2410c);
+      font-weight: 900;
+      border: 1px solid rgba(255, 204, 188, 0.25);
+      box-shadow: 0 14px 34px rgba(255, 87, 34, 0.22);
+    }
+
+    .btn-blue {
+      background: linear-gradient(135deg, var(--electric-blue), #2563eb);
+      border-color: rgba(125, 230, 255, 0.32);
+      box-shadow: 0 14px 34px rgba(0, 178, 255, 0.18);
+    }
+
+    .section-title {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 10px;
+      margin: 22px 2px 12px;
+    }
+
+    .section-title h2 {
+      font-size: 17px;
+      letter-spacing: -0.035em;
+    }
+
+    .section-title button {
+      color: var(--electric-blue);
+      background: transparent;
+      font-size: 12px;
+      font-weight: 850;
+      padding: 4px;
+    }
+
+    .snapshot-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .stat-card,
+    .card,
+    .module-card,
+    .activity-card {
+      border-radius: var(--radius-lg);
+      background:
+        linear-gradient(160deg, rgba(255, 255, 255, 0.07), transparent 42%),
+        var(--panel-card);
+      border: 1px solid var(--line);
+      box-shadow: 0 14px 34px rgba(0, 0, 0, 0.25);
+      overflow: hidden;
+    }
+
+    .stat-card {
+      min-height: 124px;
+      padding: 15px;
+      position: relative;
+      transition: 0.25s ease;
+    }
+
+    .stat-card::after {
+      content: "";
+      position: absolute;
+      right: -20px;
+      bottom: -22px;
+      width: 82px;
+      height: 82px;
+      border-radius: 999px;
+      background: rgba(0, 178, 255, 0.12);
+    }
+
+    .stat-card.updated {
+      border-color: rgba(0, 178, 255, 0.42);
+      box-shadow: 0 15px 38px rgba(0, 178, 255, 0.16);
+    }
+
+    .stat-label {
+      position: relative;
+      z-index: 1;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.055em;
+    }
+
+    .stat-value {
+      position: relative;
+      z-index: 1;
+      margin-top: 9px;
+      font-size: 21px;
+      font-weight: 950;
+      letter-spacing: -0.045em;
+      line-height: 1.05;
+    }
+
+    .stat-sub {
+      position: relative;
+      z-index: 1;
+      margin-top: 7px;
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .card {
+      padding: 15px;
+      margin-bottom: 12px;
+    }
+
+    .card-title {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+      font-size: 14px;
+      font-weight: 900;
+      margin-bottom: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .card-title .icon {
+      width: 38px;
+      height: 38px;
+      border-radius: 13px;
+      display: grid;
+      place-items: center;
+      background: rgba(255, 87, 34, 0.13);
+      border: 1px solid rgba(255, 87, 34, 0.25);
+      font-size: 18px;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 11px;
+    }
+
+    .input-group {
+      margin-bottom: 12px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 6px;
+      color: var(--text-muted);
+      font-size: 11px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .input-group input,
+    .input-group select {
+      width: 100%;
+      min-height: 45px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: rgba(2, 6, 23, 0.76);
+      color: var(--text-main);
+      padding: 10px 11px;
+      outline: none;
+      font-size: 15px;
+    }
+
+    .input-group input:focus,
+    .input-group select:focus {
+      border-color: rgba(0, 178, 255, 0.58);
+      box-shadow: 0 0 0 4px rgba(0, 178, 255, 0.1);
+    }
+
+    select option {
+      color: white;
+      background: var(--bg-dark);
+    }
+
+    .result-display {
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 14px;
+      background: #020617;
+      border-left: 3px solid var(--terminal-green);
+      color: #d9ffe8;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 12px;
+      line-height: 1.55;
+    }
+
+    .terminal-panel {
+      border-radius: var(--radius-xl);
+      overflow: hidden;
+      background: #020617;
+      border: 1px solid rgba(0, 178, 255, 0.18);
+      box-shadow: var(--shadow);
+      margin-bottom: 12px;
+    }
+
+    .terminal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 13px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .terminal-header strong {
+      font-size: 12px;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+    }
+
+    .terminal-header span {
+      color: var(--terminal-green);
+      font-size: 11px;
+      font-weight: 900;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .terminal {
+      min-height: 178px;
+      max-height: 245px;
+      overflow-y: auto;
+      padding: 14px;
+      color: #bff4ff;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      font-size: 11px;
+      line-height: 1.58;
+    }
+
+    .terminal-line {
+      margin-bottom: 9px;
+      opacity: 0;
+      transform: translateY(4px);
+      animation: terminalIn 0.24s ease forwards;
+    }
+
+    .terminal-line.ready {
+      opacity: 1;
+      transform: none;
+      color: #c7ffd9;
+      animation: none;
+    }
+
+    .terminal-line.orange {
+      color: #ffd2c2;
+    }
+
+    .terminal-line.green {
+      color: #c7ffd9;
+    }
+
+    @keyframes terminalIn {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .screen-header {
+      margin: 8px 0 14px;
+      padding: 17px;
+      border-radius: var(--radius-xl);
+      background:
+        radial-gradient(circle at 92% 0%, rgba(0, 178, 255, 0.22), transparent 38%),
+        linear-gradient(160deg, rgba(255, 255, 255, 0.06), transparent 45%),
+        rgba(15, 23, 42, 0.95);
+      border: 1px solid var(--line);
+    }
+
+    .screen-header h1 {
+      margin: 10px 0 6px;
+      font-size: 27px;
+      line-height: 1;
+      letter-spacing: -0.06em;
+    }
+
+    .screen-header p {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.45;
+    }
+
+    .scanner-viewport {
+      position: relative;
+      min-height: 220px;
+      border-radius: 18px;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(0, 178, 255, 0.05) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 178, 255, 0.05) 1px, transparent 1px),
+        #020617;
+      background-size: 18px 18px;
+      border: 1px solid rgba(0, 178, 255, 0.2);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .laser-line {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 2px;
+      top: 0;
+      background: var(--electric-blue);
+      box-shadow: 0 0 14px var(--electric-blue);
+      display: none;
+      animation: scanLine 1.1s linear infinite;
+    }
+
+    .scanner-viewport.scanning .laser-line {
+      display: block;
+    }
+
+    @keyframes scanLine {
+      0% { top: 0%; }
+      50% { top: 100%; }
+      100% { top: 0%; }
+    }
+
+    .point-cloud {
+      position: absolute;
+      inset: 0;
+      opacity: 0.35;
+      display: none;
+      background-image: radial-gradient(var(--electric-blue) 1px, transparent 1px);
+      background-size: 12px 12px;
+    }
+
+    .scanner-viewport.complete .point-cloud,
+    .scanner-viewport.scanning .point-cloud {
+      display: block;
+    }
+
+    .scan-prompt {
+      position: relative;
+      z-index: 2;
+      padding: 18px;
+    }
+
+    .scan-prompt .scan-icon {
+      display: block;
+      font-size: 42px;
+      margin-bottom: 10px;
+    }
+
+    .scan-prompt strong {
+      display: block;
+      margin-bottom: 5px;
+      font-size: 15px;
+    }
+
+    .scan-prompt span {
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.35;
+    }
+
+    .module-grid {
+      display: grid;
+      gap: 10px;
+    }
+
+    .module-card,
+    .activity-card {
+      width: 100%;
+      color: var(--text-main);
+      text-align: left;
+      padding: 14px;
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      gap: 11px;
+      align-items: center;
+    }
+
+    .module-icon,
+    .activity-icon {
+      width: 44px;
+      height: 44px;
+      border-radius: 15px;
+      display: grid;
+      place-items: center;
+      background: rgba(0, 178, 255, 0.12);
+      border: 1px solid rgba(0, 178, 255, 0.22);
+      font-size: 19px;
+    }
+
+    .module-main,
+    .activity-main {
+      min-width: 0;
+    }
+
+    .module-main strong,
+    .activity-main strong {
+      display: block;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .module-main span,
+    .activity-main span {
+      display: block;
+      margin-top: 4px;
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.35;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 26px;
+      padding: 5px 9px;
+      border-radius: 999px;
+      color: #c7ffd9;
+      background: rgba(34, 197, 94, 0.11);
+      border: 1px solid rgba(34, 197, 94, 0.24);
+      font-size: 10px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.025em;
+      white-space: nowrap;
+    }
+
+    .chip.orange {
+      color: #ffd2c2;
+      background: rgba(255, 87, 34, 0.12);
+      border-color: rgba(255, 87, 34, 0.26);
+    }
+
+    .chip.blue {
+      color: #c8f3ff;
+      background: rgba(0, 178, 255, 0.12);
+      border-color: rgba(0, 178, 255, 0.25);
+    }
+
+    .mini-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 12px;
+    }
+
+    .mini-box {
+      min-width: 0;
+      border-radius: 14px;
+      padding: 10px 8px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--line);
+    }
+
+    .mini-box span {
+      display: block;
+      color: var(--text-muted);
+      font-size: 10px;
+      font-weight: 850;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+
+    .mini-box strong {
+      display: block;
+      margin-top: 5px;
+      font-size: 13px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .small-action {
+      flex: 1;
+      min-height: 44px;
+      border-radius: 14px;
+      background: rgba(255, 255, 255, 0.06);
+      color: var(--text-main);
+      border: 1px solid var(--line);
+      font-size: 12px;
+      font-weight: 850;
+    }
+
+    .small-action.blue {
+      background: rgba(0, 178, 255, 0.14);
+      border-color: rgba(0, 178, 255, 0.25);
+      color: #c8f3ff;
+    }
+
+    .small-action.orange {
+      background: rgba(255, 87, 34, 0.13);
+      border-color: rgba(255, 87, 34, 0.25);
+      color: #ffd2c2;
+    }
+
+    .action-row {
+      display: flex;
+      gap: 9px;
+      margin-top: 12px;
+    }
+
+    .bottom-nav {
+      position: fixed;
+      left: 50%;
+      bottom: 0;
+      transform: translateX(-50%);
+      z-index: 100;
+      width: min(480px, 100%);
+      padding: 10px 12px calc(10px + var(--safe-bottom));
+      background: linear-gradient(180deg, transparent, rgba(2, 6, 23, 0.92) 18%, rgba(2, 6, 23, 0.99));
+      backdrop-filter: blur(16px);
+    }
+
+    .nav-inner {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7px;
+      padding: 9px;
+      border-radius: 25px;
+      background: rgba(15, 23, 42, 0.93);
+      border: 1px solid var(--line);
+      box-shadow: 0 16px 45px rgba(0, 0, 0, 0.48);
+    }
+
+    .nav-item {
+      min-width: 0;
+      min-height: 52px;
+      border-radius: 17px;
+      background: transparent;
+      color: var(--text-muted);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      font-size: 10px;
+      font-weight: 850;
+    }
+
+    .nav-item .nav-icon {
+      font-size: 18px;
+      line-height: 1;
+    }
+
+    .nav-item.active {
+      color: white;
+      background: rgba(0, 178, 255, 0.16);
+      box-shadow: inset 0 0 0 1px rgba(0, 178, 255, 0.2);
+    }
+
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      z-index: 200;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 14px;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(10px);
+    }
+
+    .modal-backdrop.active {
+      display: flex;
+    }
+
+    .modal {
+      width: min(452px, 100%);
+      max-height: 88dvh;
+      overflow-y: auto;
+      border-radius: 28px;
+      padding: 16px;
+      background:
+        radial-gradient(circle at 92% 0%, rgba(0, 178, 255, 0.18), transparent 36%),
+        #09111f;
+      border: 1px solid var(--line-strong);
+      box-shadow: 0 24px 90px rgba(0, 0, 0, 0.68);
+      animation: sheetUp 0.22s ease both;
+    }
+
+    @keyframes sheetUp {
+      from { opacity: 0; transform: translateY(18px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    .modal-header h2 {
+      font-size: 21px;
+      letter-spacing: -0.045em;
+    }
+
+    .modal-header p {
+      margin-top: 5px;
+      color: var(--text-muted);
+      font-size: 12px;
+      line-height: 1.4;
+    }
+
+    .close-btn {
+      width: 39px;
+      height: 39px;
+      flex: 0 0 auto;
+      border-radius: 14px;
+      color: white;
+      background: rgba(255, 255, 255, 0.07);
+      border: 1px solid var(--line);
+    }
+
+    .pitch-block {
+      display: grid;
+      gap: 10px;
+    }
+
+    .pitch-card {
+      border-radius: 20px;
+      padding: 14px;
+      background: rgba(255, 255, 255, 0.055);
+      border: 1px solid var(--line);
+    }
+
+    .pitch-card h3 {
+      margin-bottom: 7px;
+      font-size: 15px;
+      letter-spacing: -0.025em;
+    }
+
+    .pitch-card p {
+      color: var(--text-muted);
+      font-size: 13px;
+      line-height: 1.48;
+    }
+
+    .side-menu {
+      position: fixed;
+      inset: 0 auto 0 0;
+      z-index: 180;
+      width: min(355px, 86vw);
+      padding: calc(16px + var(--safe-top)) 14px 16px;
+      background:
+        radial-gradient(circle at 20% 0%, rgba(255, 87, 34, 0.16), transparent 35%),
+        #080e19;
+      border-right: 1px solid var(--line);
+      transform: translateX(-102%);
+      transition: 0.24s ease;
+      box-shadow: 20px 0 80px rgba(0, 0, 0, 0.55);
+    }
+
+    .side-menu.active {
+      transform: translateX(0);
+    }
+
+    .menu-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 170;
+      display: none;
+      background: rgba(0, 0, 0, 0.55);
+    }
+
+    .menu-overlay.active {
+      display: block;
+    }
+
+    .menu-list {
+      display: grid;
+      gap: 9px;
+      margin-top: 16px;
+    }
+
+    .menu-item {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      min-height: 50px;
+      border-radius: 17px;
+      background: rgba(255, 255, 255, 0.055);
+      color: white;
+      border: 1px solid var(--line);
+      padding: 0 13px;
+      font-weight: 850;
+      text-align: left;
+    }
+
+    .menu-item span {
+      color: var(--text-muted);
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 750;
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: calc(98px + var(--safe-bottom));
+      transform: translateX(-50%) translateY(18px);
+      z-index: 300;
+      width: min(420px, calc(100% - 28px));
+      opacity: 0;
+      pointer-events: none;
+      transition: 0.25s ease;
+      border-radius: 18px;
+      padding: 12px 14px;
+      color: white;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid var(--line-strong);
+      box-shadow: 0 18px 50px rgba(0, 0, 0, 0.55);
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .toast.active {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
+    @media (max-width: 355px) {
+      .snapshot-grid,
+      .grid-2 {
+        grid-template-columns: 1fr;
+      }
+
+      .mini-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+
+      .nav-item {
+        font-size: 9px;
+      }
+
+      .brand-title {
+        font-size: 1.75rem;
+      }
+    }
+  </style>
 </head>
 <body>
+  <div id="splash-screen">
+    <div class="portal-glow"></div>
 
-    <header>
-        <div class="logo-container">
-            <h1>PRO TRADES <span>OS</span></h1>
+    <div class="brand-header">
+      <div class="splash-logo">PT</div>
+      <h1 class="brand-title">PRO TRADES</h1>
+      <div class="brand-subtitle">HVAC Diagnostic OS</div>
+    </div>
+
+    <button class="center-graphic" id="portalGraphic" aria-label="Tap to initialize" style="background: transparent; color: inherit;">
+      <div class="power-ring">
+        <div class="power-core">⏻</div>
+      </div>
+      <p>Tap to Initialize</p>
+    </button>
+
+    <button class="portal-btn" id="launchBtn">LAUNCH CONSOLE</button>
+
+    <div class="parent-brand">
+      Field-first trade intelligence<br />
+      <span style="font-size:0.65rem; opacity:0.72;">PT / <strong>Pro Trades Academy</strong></span>
+    </div>
+  </div>
+
+  <div id="main-app">
+    <header class="topbar">
+      <button class="icon-btn" id="menuBtn" aria-label="Open menu">☰</button>
+      <div class="brand">
+        <div class="logo-mark">PT</div>
+        <div class="brand-title-shell">
+          <strong>Pro Trades Academy</strong>
+          <span>HVAC Diagnostic OS</span>
         </div>
-        <div class="status-badge" id="systemStatus">SYS_ONLINE</div>
+      </div>
+      <button class="icon-btn" id="profileBtn" aria-label="Open system profile">●</button>
     </header>
 
     <main>
-        <!-- CALCULATOR VIEW -->
-        <div id="calc-view" class="app-view active">
-            <div class="card">
-                <div class="card-title">
-                    <i data-lucide="calculator" style="color: var(--electric-blue)"></i> 
-                    Diagnostic Metrics
-                </div>
-                <div class="grid-2">
-                    <div class="input-group">
-                        <label>Length (ft)</label>
-                        <input type="number" id="calcLength" value="20" placeholder="0">
-                    </div>
-                    <div class="input-group">
-                        <label>Width (ft)</label>
-                        <input type="number" id="calcWidth" value="15" placeholder="0">
-                    </div>
-                </div>
-                <div class="input-group">
-                    <label>Ceiling Height (ft)</label>
-                    <input type="number" id="calcHeight" value="8" placeholder="0">
-                </div>
-                <button class="btn" onclick="runDiagnostics()">Calculate Demands</button>
-
-                <div class="results-box">
-                    <div class="result-row">
-                        <span style="color: var(--text-muted)">Space Volume:</span>
-                        <strong id="resVolume">0 cu ft</strong>
-                    </div>
-                    <div class="result-row">
-                        <span style="color: var(--text-muted)">Est. Thermal Load:</span>
-                        <strong id="resBTU" style="color: var(--safety-orange)">0 BTU</strong>
-                    </div>
-                    <div class="result-row">
-                        <span style="color: var(--text-muted)">Target Duct Size:</span>
-                        <strong id="resDuct">0" Round</strong>
-                    </div>
-                </div>
+      <section id="home-view" class="app-view active">
+        <div class="hero">
+          <div class="hero-content">
+            <div class="eyebrow"><span class="pulse"></span> HVAC Training Core Online</div>
+            <h1>HVAC Specialist Core</h1>
+            <p>Automated ACCA Manual J thermal loads, Manual S equipment parsing, and Manual D air distribution layouts straight from the field.</p>
+            <div class="scan-action">
+              <button class="btn" id="mainScanBtn">🎙 Initiate Spatial Scan</button>
             </div>
+          </div>
         </div>
 
-        <!-- LiDAR SCANNER VIEW -->
-        <div id="scan-view" class="app-view">
-            <div class="card">
-                <div class="card-title">
-                    <i data-lucide="scan-face" style="color: var(--electric-blue)"></i> 
-                    Spatial Telemetry
-                </div>
-                <div class="scanner-viewport">
-                    <div class="laser-line" id="laser"></div>
-                    <div class="point-cloud" id="points"></div>
-                    <div id="scanPrompt" style="text-align: center; color: var(--text-muted); z-index: 10;">
-                        <i data-lucide="aperture" style="width: 48px; height: 48px; margin-bottom: 0.5rem; color: var(--electric-blue);"></i>
-                        <p>Ready to Scan Mechanical Space</p>
-                    </div>
-                </div>
-                <div style="margin-top: 1rem; margin-bottom: 1rem;">
-                    <button class="btn btn-blue" id="scanBtn" onclick="toggleScan()">Initialize LiDAR Mesh</button>
-                </div>
-                <div class="terminal" id="termConsole">
-                    [SYSTEM READY] Awaiting hardware deployment signal...
-                </div>
-            </div>
+        <div class="section-title">
+          <h2>Today’s Snapshot</h2>
+          <button id="resetBtn">Reset</button>
         </div>
 
-        <!-- PITCH DECK VIEW -->
-        <div id="pitch-view" class="app-view">
-            <div class="card pitch-slide">
-                <div class="card-title">
-                    <i data-lucide="presentation" style="color: var(--safety-orange)"></i>
-                    Executive Strategy
-                </div>
-                <h2>The Trade Scalability Gap</h2>
-                <p>Residential HVAC service is bottlenecked by manual calculations, inaccurate field scoping, and quoting friction that kills conversion rates at the kitchen table.</p>
-                
-                <div class="highlight-box">
-                    "If a software ecosystem isn't optimized for hyper-fast execution and real market feasibility, technical features do not matter."
-                </div>
-
-                <h2>The OS Solution</h2>
-                <p>Aqua Homes OS bridges high-level architecture with raw field operations—allowing a tech to model thermal demands instantly, verify clearances via spatial data, and close jobs on site.</p>
-            </div>
+        <div class="snapshot-grid" id="snapshotGrid">
+          <div class="stat-card">
+            <div class="stat-label" id="statLabel1">Training Zone</div>
+            <div class="stat-value" id="statValue1">Basement Lab</div>
+            <div class="stat-sub">Ready for field scan</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" id="statLabel2">Manual J Status</div>
+            <div class="stat-value" id="statValue2">Not Calculated</div>
+            <div class="stat-sub">Awaiting envelope data</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" id="statLabel3">Manual S Status</div>
+            <div class="stat-value" id="statValue3">No Match</div>
+            <div class="stat-sub">Equipment sizing locked</div>
+          </div>
+          <div class="stat-card">
+            <div class="stat-label" id="statLabel4">Manual D Status</div>
+            <div class="stat-value" id="statValue4">No Layout</div>
+            <div class="stat-sub">Duct run not generated</div>
+          </div>
         </div>
+
+        <div class="section-title">
+          <h2>Internal Console</h2>
+          <button id="clearConsoleBtn">Clear</button>
+        </div>
+
+        <div class="terminal-panel">
+          <div class="terminal-header">
+            <strong>Spatial Diagnostic Terminal</strong>
+            <span id="consoleStatus">IDLE</span>
+          </div>
+          <div class="terminal" id="termConsole">
+            <div class="terminal-line ready">[READY]: Pro Trades HVAC Diagnostic OS initialized. Tap “Initiate Spatial Scan” to begin.</div>
+          </div>
+        </div>
+
+        <div class="section-title">
+          <h2>Student Workflow</h2>
+          <button data-open-modal="workflow">Review</button>
+        </div>
+        <div class="module-grid" id="workflowList"></div>
+      </section>
+
+      <section id="scan-view" class="app-view">
+        <div class="screen-header">
+          <div class="eyebrow"><span class="pulse"></span> Spatial Scan Lab</div>
+          <h1>Scan</h1>
+          <p>Capture a training zone, simulate room volume, run Manual J load logic, parse Manual S equipment sizing, and generate Manual D duct layout output.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">⌁</span> LiDAR Scanner Card</div>
+          <div class="scanner-viewport" id="scannerViewport">
+            <div class="laser-line"></div>
+            <div class="point-cloud"></div>
+            <div class="scan-prompt" id="scanPrompt">
+              <span class="scan-icon">▧</span>
+              <strong>Sensor Ready</strong>
+              <span>Prepared to map 32' x 44' x 8' basement zone.</span>
+            </div>
+          </div>
+          <button class="btn btn-blue" id="lidarScanBtn">🎙 Initiate Spatial Scan</button>
+          <div class="result-display" id="lidarResult">&gt; Awaiting basement-zone spatial scan...</div>
+        </div>
+      </section>
+
+      <section id="tools-view" class="app-view">
+        <div class="screen-header">
+          <div class="eyebrow"><span class="pulse"></span> Diagnostic Tools</div>
+          <h1>Tools</h1>
+          <p>Field-ready HVAC calculators and assistant panels styled for phone-first training demos.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🌡</span> Superheat / Subcooling Core</div>
+          <div class="input-group">
+            <label>Metering Device</label>
+            <select id="meteringDevice">
+              <option value="txv">TXV - Target Subcooling</option>
+              <option value="fixed">Fixed Orifice - Target Superheat</option>
+            </select>
+          </div>
+          <div class="grid-2">
+            <div class="input-group">
+              <label id="satTempLabel">Liquid Sat Temp</label>
+              <input type="number" id="satTemp" value="105" />
+            </div>
+            <div class="input-group">
+              <label id="lineTempLabel">Liquid Line Temp</label>
+              <input type="number" id="lineTemp" value="97" />
+            </div>
+          </div>
+          <button class="btn" id="computeBtn">Compute Metrics</button>
+          <div class="result-display" id="chargeResult">&gt; Awaiting target system parameters...</div>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">🤖</span> AI Field Assistant</div>
+          <div class="terminal" id="aiTerminal" style="min-height: 155px; border: 1px solid rgba(0,178,255,0.15); border-radius: 14px;">
+            <div class="terminal-line ready">[AI Core]: Operational. Input calculated telemetry metrics to run immediate system failure diagnostics.</div>
+          </div>
+        </div>
+      </section>
+
+      <section id="report-view" class="app-view">
+        <div class="screen-header">
+          <div class="eyebrow"><span class="pulse"></span> Instructor Report</div>
+          <h1>Report</h1>
+          <p>Mock student report showing required basement-zone output for Manual J, Manual S, and Manual D review.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-title"><span class="icon">▤</span> Basement Zone Output</div>
+          <div class="mini-grid">
+            <div class="mini-box"><span>Volume</span><strong>11,264 ft³</strong></div>
+            <div class="mini-box"><span>Load</span><strong>34,200</strong></div>
+            <div class="mini-box"><span>System</span><strong>2.5 Tons</strong></div>
+            <div class="mini-box"><span>Velocity</span><strong>900 FPM</strong></div>
+            <div class="mini-box"><span>Trunk</span><strong>12-Inch</strong></div>
+            <div class="mini-box"><span>Review</span><strong>Instructor</strong></div>
+          </div>
+          <div class="action-row">
+            <button class="small-action blue" data-open-modal="report">Open Details</button>
+            <button class="small-action orange" data-open-modal="presentation">Pitch Mode</button>
+          </div>
+        </div>
+      </section>
     </main>
+  </div>
 
-    <nav>
-        <button class="nav-item active" onclick="switchView('calc-view', this)">
-            <i data-lucide="calculator"></i>
-            <span>Diagnostics</span>
-        </button>
-        <button class="nav-item" onclick="switchView('scan-view', this)">
-            <i data-lucide="scan"></i>
-            <span>LiDAR Space</span>
-        </button>
-        <button class="nav-item" onclick="switchView('pitch-view', this)">
-            <i data-lucide="presentation"></i>
-            <span>Pitch Deck</span>
-        </button>
-    </nav>
+  <nav class="bottom-nav" aria-label="Bottom navigation" id="bottomNav" style="display:none;">
+    <div class="nav-inner">
+      <button class="nav-item active" data-view="home"><span class="nav-icon">⌂</span><span>Home</span></button>
+      <button class="nav-item" data-view="scan"><span class="nav-icon">⌁</span><span>Scan</span></button>
+      <button class="nav-item" data-view="tools"><span class="nav-icon">🧰</span><span>Tools</span></button>
+      <button class="nav-item" data-view="report"><span class="nav-icon">▤</span><span>Report</span></button>
+      <button class="nav-item" id="presentNavBtn"><span class="nav-icon">▣</span><span>Present</span></button>
+    </div>
+  </nav>
 
-    <script>
-        // Initialize Lucide Icons
-        lucide.createIcons();
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <aside class="side-menu" id="sideMenu" aria-label="Side menu">
+    <div class="brand">
+      <div class="logo-mark">PT</div>
+      <div class="brand-title-shell">
+        <strong>Pro Trades Academy</strong>
+        <span>HVAC Diagnostic OS</span>
+      </div>
+    </div>
+    <div class="menu-list">
+      <button class="menu-item" data-view="home">⌂ Home <span>Live</span></button>
+      <button class="menu-item" data-view="scan">⌁ Scan <span>Demo</span></button>
+      <button class="menu-item" data-view="tools">🧰 Tools <span>Core</span></button>
+      <button class="menu-item" data-view="report">▤ Report <span>Mock</span></button>
+      <button class="menu-item" data-open-modal="presentation">▣ Present <span>Pitch</span></button>
+    </div>
+  </aside>
 
-        // View Switching Logic
-        function switchView(viewId, element) {
-            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-            
-            document.getElementById(viewId).classList.add('active');
-            element.classList.add('active');
+  <div class="modal-backdrop" id="modalBackdrop">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <div class="modal-header">
+        <div>
+          <h2 id="modalTitle">Modal</h2>
+          <p id="modalSubtitle">Prototype panel.</p>
+        </div>
+        <button class="close-btn" id="closeModal" aria-label="Close modal">✕</button>
+      </div>
+      <div id="modalContent"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    const appState = {
+      currentView: "home",
+      scanRunning: false,
+      scanComplete: false
+    };
+
+    const requiredTerminalLines = [
+      "[SYSTEM]: Booting local spatial LiDAR matrices...",
+      "[PARSING]: Mapping baseline foundation. Found 32' x 44' x 8' basement zone.",
+      "[PROCESSING]: Running ACCA Manual J sensible/latent thermal calculations...",
+      "[MANUAL D COMPLETED]: Air velocity balances at 900 FPM. 12-Inch Main Trunk Line Required."
+    ];
+
+    const workflowItems = [
+      { icon: "📐", title: "Capture geometry", desc: "Scan the 32' x 44' x 8' basement zone.", status: "Step 1", tone: "blue" },
+      { icon: "🔥", title: "Manual J load", desc: "Calculate sensible and latent thermal load.", status: "Step 2", tone: "orange" },
+      { icon: "⚙️", title: "Manual S sizing", desc: "Parse equipment capacity against load.", status: "Step 3", tone: "orange" },
+      { icon: "🌬", title: "Manual D layout", desc: "Generate 900 FPM airflow and trunk result.", status: "Step 4", tone: "green" }
+    ];
+
+    const views = {
+      home: document.getElementById("home-view"),
+      scan: document.getElementById("scan-view"),
+      tools: document.getElementById("tools-view"),
+      report: document.getElementById("report-view")
+    };
+
+    const splash = document.getElementById("splash-screen");
+    const mainApp = document.getElementById("main-app");
+    const bottomNav = document.getElementById("bottomNav");
+    const termConsole = document.getElementById("termConsole");
+    const consoleStatus = document.getElementById("consoleStatus");
+    const modalBackdrop = document.getElementById("modalBackdrop");
+    const modalTitle = document.getElementById("modalTitle");
+    const modalSubtitle = document.getElementById("modalSubtitle");
+    const modalContent = document.getElementById("modalContent");
+    const toast = document.getElementById("toast");
+    const sideMenu = document.getElementById("sideMenu");
+    const menuOverlay = document.getElementById("menuOverlay");
+    const scannerViewport = document.getElementById("scannerViewport");
+    const scanPrompt = document.getElementById("scanPrompt");
+    const lidarResult = document.getElementById("lidarResult");
+
+    function launchApp() {
+      splash.classList.add("hidden");
+      window.setTimeout(() => {
+        splash.style.display = "none";
+        mainApp.style.display = "block";
+        bottomNav.style.display = "block";
+        window.setTimeout(() => mainApp.classList.add("active"), 30);
+      }, 460);
+    }
+
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.add("active");
+      window.clearTimeout(showToast.timer);
+      showToast.timer = window.setTimeout(() => toast.classList.remove("active"), 2600);
+    }
+
+    function openMenu() {
+      sideMenu.classList.add("active");
+      menuOverlay.classList.add("active");
+    }
+
+    function closeMenu() {
+      sideMenu.classList.remove("active");
+      menuOverlay.classList.remove("active");
+    }
+
+    function switchView(viewName) {
+      if (!views[viewName]) return;
+      appState.currentView = viewName;
+      Object.values(views).forEach(view => view.classList.remove("active"));
+      views[viewName].classList.add("active");
+
+      document.querySelectorAll(".nav-item[data-view]").forEach(button => {
+        button.classList.toggle("active", button.dataset.view === viewName);
+      });
+      document.getElementById("presentNavBtn").classList.remove("active");
+      closeMenu();
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderWorkflow() {
+      const list = document.getElementById("workflowList");
+      list.innerHTML = workflowItems.map(item => `
+        <button class="activity-card" data-open-modal="workflow">
+          <div class="activity-icon">${item.icon}</div>
+          <div class="activity-main">
+            <strong>${item.title}</strong>
+            <span>${item.desc}</span>
+          </div>
+          <span class="chip ${item.tone === "orange" ? "orange" : item.tone === "blue" ? "blue" : ""}">${item.status}</span>
+        </button>
+      `).join("");
+    }
+
+    function appendTerminalLine(text, tone) {
+      const line = document.createElement("div");
+      line.className = `terminal-line ${tone || ""}`;
+      line.textContent = text;
+      termConsole.appendChild(line);
+      termConsole.scrollTop = termConsole.scrollHeight;
+    }
+
+    function clearConsole() {
+      termConsole.innerHTML = '<div class="terminal-line ready">[READY]: Pro Trades HVAC Diagnostic OS initialized. Tap “Initiate Spatial Scan” to begin.</div>';
+      consoleStatus.textContent = "IDLE";
+    }
+
+    function updateSnapshotCards() {
+      const labels = ["Space Volume", "Manual J Load", "System Sizing", "Duct Layout"];
+      const values = ["11,264 cu. ft.", "34,200 BTU/h (Loss)", "2.5 Tons Needed", "12-Inch Trunk"];
+      const subs = ["32' x 44' x 8' basement zone", "ACCA Manual J training output", "Manual S equipment parsing result", "Manual D air distribution output"];
+
+      labels.forEach((label, index) => {
+        const i = index + 1;
+        document.getElementById(`statLabel${i}`).textContent = label;
+        document.getElementById(`statValue${i}`).textContent = values[index];
+        const card = document.querySelectorAll(".stat-card")[index];
+        card.querySelector(".stat-sub").textContent = subs[index];
+        card.classList.add("updated");
+      });
+
+      lidarResult.innerHTML = "&gt; SCAN COMPLETE: 11,264 cu. ft. mapped.<br>&gt; Manual J Load: 34,200 BTU/h (Loss).<br>&gt; Manual S: 2.5 Tons Needed.<br>&gt; Manual D: 12-Inch Trunk at 900 FPM.";
+      scannerViewport.classList.remove("scanning");
+      scannerViewport.classList.add("complete");
+      scanPrompt.innerHTML = '<span class="scan-icon">▦</span><strong>SCAN COMPLETE</strong><span>11,264 cu. ft. mapped. 2.5 Tons Needed. 12-Inch Trunk required.</span>';
+      appState.scanComplete = true;
+    }
+
+    function runSpatialScan() {
+      if (appState.scanRunning) {
+        showToast("Spatial scan is already running.");
+        return;
+      }
+
+      appState.scanRunning = true;
+      consoleStatus.textContent = "SCANNING";
+      termConsole.innerHTML = "";
+      scannerViewport.classList.remove("complete");
+      scannerViewport.classList.add("scanning");
+      scanPrompt.innerHTML = '<span class="scan-icon">⌁</span><strong>Scanning...</strong><span>Mapping spatial boundaries and HVAC training envelope.</span>';
+      lidarResult.innerHTML = "&gt; Mapping baseline foundation...";
+
+      requiredTerminalLines.forEach((text, index) => {
+        window.setTimeout(() => {
+          appendTerminalLine(text, index === 0 || index === 3 ? "green" : "orange");
+        }, index * 430);
+      });
+
+      window.setTimeout(() => {
+        updateSnapshotCards();
+        consoleStatus.textContent = "COMPLETE";
+        appState.scanRunning = false;
+        showToast("Spatial scan complete. Manual J, S, and D outputs generated.");
+      }, 2000);
+    }
+
+    function resetDemo() {
+      const defaults = [
+        ["Training Zone", "Basement Lab", "Ready for field scan"],
+        ["Manual J Status", "Not Calculated", "Awaiting envelope data"],
+        ["Manual S Status", "No Match", "Equipment sizing locked"],
+        ["Manual D Status", "No Layout", "Duct run not generated"]
+      ];
+
+      defaults.forEach((item, index) => {
+        const i = index + 1;
+        document.getElementById(`statLabel${i}`).textContent = item[0];
+        document.getElementById(`statValue${i}`).textContent = item[1];
+        const card = document.querySelectorAll(".stat-card")[index];
+        card.querySelector(".stat-sub").textContent = item[2];
+        card.classList.remove("updated");
+      });
+
+      appState.scanComplete = false;
+      appState.scanRunning = false;
+      scannerViewport.classList.remove("scanning", "complete");
+      scanPrompt.innerHTML = '<span class="scan-icon">▧</span><strong>Sensor Ready</strong><span>Prepared to map 32\' x 44\' x 8\' basement zone.</span>';
+      lidarResult.innerHTML = "&gt; Awaiting basement-zone spatial scan...";
+      clearConsole();
+      showToast("Demo reset.");
+    }
+
+    function toggleCalculationMode() {
+      const device = document.getElementById("meteringDevice").value;
+      document.getElementById("satTempLabel").textContent = device === "fixed" ? "Vapor Sat Temp" : "Liquid Sat Temp";
+      document.getElementById("lineTempLabel").textContent = device === "fixed" ? "Suction Line Temp" : "Liquid Line Temp";
+    }
+
+    function calculateCharge() {
+      const sat = Number.parseFloat(document.getElementById("satTemp").value || "0");
+      const line = Number.parseFloat(document.getElementById("lineTemp").value || "0");
+      const device = document.getElementById("meteringDevice").value;
+      const result = device === "fixed" ? line - sat : sat - line;
+      const metric = device === "fixed" ? "SUPERHEAT" : "SUBCOOLING";
+      const status = result < 10 ? "LOW CHARGE / RESTRICTION CHECK" : "WITHIN TRAINING RANGE";
+
+      document.getElementById("chargeResult").innerHTML = `&gt; CALCULATED ${metric}: ${result.toFixed(1)}°F<br>&gt; STATUS: ${status}<br>&gt; NOTE: Verify airflow and coil condition before charge adjustment.`;
+      const terminal = document.getElementById("aiTerminal");
+      terminal.innerHTML += `<div class="terminal-line green" style="opacity:1;transform:none;">[AI Core]: ${metric} telemetry received. ${status}. Instructor verification required before field action.</div>`;
+      terminal.scrollTop = terminal.scrollHeight;
+    }
+
+    function openModal(type) {
+      const templates = {
+        presentation: {
+          title: "Presentation Mode",
+          subtitle: "School leadership pitch for the Pro Trades Academy HVAC Diagnostic OS.",
+          content: `
+            <div class="pitch-block">
+              <div class="pitch-card">
+                <h3>3-Hour Paper Calculation to One Scan</h3>
+                <p>This tool compresses a 3-hour manual paper HVAC calculation into a single-click spatial scan, giving students an immediate training model they can inspect, question, and verify.</p>
+              </div>
+              <div class="pitch-card">
+                <h3>Manual J, Manual S, Manual D</h3>
+                <p>It helps field trade students learn ACCA Manual J thermal loads, Manual S equipment sizing, and Manual D air distribution layouts through a phone-first workflow that feels close to a real jobsite.</p>
+              </div>
+              <div class="pitch-card">
+                <h3>Modern School Recruiting Asset</h3>
+                <p>It helps school leadership modernize HVAC training with a phone-first teaching tool that demonstrates advanced field diagnostics, faster lab feedback, and a clear path from classroom math to field execution.</p>
+              </div>
+              <div class="pitch-card">
+                <h3>Teaching Assistant, Not Replacement</h3>
+                <p>The OS should be framed as a teaching assistant, not a replacement for instructor verification. Instructors still own final judgment, code interpretation, field safety, and student assessment.</p>
+              </div>
+              <div class="action-row">
+                <button class="small-action blue" id="modalRunScanBtn">Run Scan Demo</button>
+                <button class="small-action orange" data-view="report">Open Report</button>
+              </div>
+            </div>
+          `
+        },
+        workflow: {
+          title: "Student Workflow",
+          subtitle: "How the scan turns HVAC calculations into instructor-ready checkpoints.",
+          content: `<div class="module-grid">${workflowItems.map(item => `
+            <div class="activity-card">
+              <div class="activity-icon">${item.icon}</div>
+              <div class="activity-main"><strong>${item.title}</strong><span>${item.desc}</span></div>
+              <span class="chip ${item.tone === "orange" ? "orange" : item.tone === "blue" ? "blue" : ""}">${item.status}</span>
+            </div>`).join("")}</div>`
+        },
+        report: {
+          title: "Report Details",
+          subtitle: "Required basement-zone output for the GitHub Pages demo.",
+          content: `
+            <div class="pitch-card">
+              <h3>Basement Zone Result</h3>
+              <p>Space Volume: 11,264 cu. ft.<br>Manual J Load: 34,200 BTU/h (Loss)<br>System Sizing: 2.5 Tons Needed<br>Duct Layout: 12-Inch Trunk</p>
+            </div>
+          `
+        },
+        profile: {
+          title: "PT / Pro Trades Academy",
+          subtitle: "HVAC Diagnostic OS standalone mobile prototype.",
+          content: `
+            <div class="pitch-card">
+              <h3>Standalone GitHub Pages Demo</h3>
+              <p>This app is a single-file mobile prototype with no backend, no external APIs, no external CSS, and no external JavaScript.</p>
+            </div>
+          `
+        }
+      };
+
+      const template = templates[type] || templates.profile;
+      modalTitle.textContent = template.title;
+      modalSubtitle.textContent = template.subtitle;
+      modalContent.innerHTML = template.content;
+      modalBackdrop.classList.add("active");
+      closeMenu();
+    }
+
+    function closeModal() {
+      modalBackdrop.classList.remove("active");
+    }
+
+    function bindEvents() {
+      document.getElementById("launchBtn").addEventListener("click", launchApp);
+      document.getElementById("portalGraphic").addEventListener("click", launchApp);
+      document.getElementById("menuBtn").addEventListener("click", openMenu);
+      document.getElementById("profileBtn").addEventListener("click", () => openModal("profile"));
+      document.getElementById("mainScanBtn").addEventListener("click", runSpatialScan);
+      document.getElementById("lidarScanBtn").addEventListener("click", runSpatialScan);
+      document.getElementById("resetBtn").addEventListener("click", resetDemo);
+      document.getElementById("clearConsoleBtn").addEventListener("click", clearConsole);
+      document.getElementById("meteringDevice").addEventListener("change", toggleCalculationMode);
+      document.getElementById("computeBtn").addEventListener("click", calculateCharge);
+      document.getElementById("presentNavBtn").addEventListener("click", () => {
+        document.getElementById("presentNavBtn").classList.add("active");
+        openModal("presentation");
+      });
+      document.getElementById("closeModal").addEventListener("click", closeModal);
+      menuOverlay.addEventListener("click", closeMenu);
+      modalBackdrop.addEventListener("click", event => {
+        if (event.target === modalBackdrop) closeModal();
+      });
+
+      document.addEventListener("click", event => {
+        const viewButton = event.target.closest("[data-view]");
+        if (viewButton) {
+          closeModal();
+          switchView(viewButton.dataset.view);
+          return;
         }
 
-        // Live Diagnostic Calculation Math
-        function runDiagnostics() {
-            const l = parseFloat(document.getElementById('calcLength').value) || 0;
-            const w = parseFloat(document.getElementById('calcWidth').value) || 0;
-            const h = parseFloat(document.getElementById('calcHeight').value) || 0;
-
-            const volume = l * w * h;
-            // Standard baseline calculation for rough HVAC sizing rules
-            const btu = volume * 4; 
-            let ductSize = "6\" Round";
-            
-            if (btu > 12000) ductSize = "8\" Round";
-            if (btu > 24000) ductSize = "10\" Round";
-            if (btu > 36000) ductSize = "12\" Round";
-
-            document.getElementById('resVolume').innerText = volume.toLocaleString() + " cu ft";
-            document.getElementById('resBTU').innerText = btu.toLocaleString() + " BTU";
-            document.getElementById('resDuct').innerText = ductSize;
+        const modalButton = event.target.closest("[data-open-modal]");
+        if (modalButton) {
+          openModal(modalButton.dataset.openModal);
+          return;
         }
 
-        // Simulated LiDAR Animation and Terminal Logs
-        let scanning = false;
-        let scanInterval;
-
-        function toggleScan() {
-            const laser = document.getElementById('laser');
-            const points = document.getElementById('points');
-            const prompt = document.getElementById('scanPrompt');
-            const btn = document.getElementById('scanBtn');
-            const consoleEl = document.getElementById('termConsole');
-
-            scanning = !scanning;
-
-            if (scanning) {
-                laser.style.display = 'block';
-                points.style.display = 'block';
-                prompt.style.display = 'none';
-                btn.innerText = "Terminate Scan Mesh";
-                btn.style.backgroundColor = "#ef4444";
-                
-                consoleEl.innerHTML = "[INFO] Initializing field hardware sensors...<br>";
-                
-                let steps = [
-                    "[OK] Emitting LiDAR arrays...",
-                    "[DATA] Capturing spatial boundary points...",
-                    "[COMPUTE] Resolving structural obstacles...",
-                    "[SUCCESS] Mesh completed: 1,420 reference coordinates locked."
-                ];
-                let idx = 0;
-                
-                scanInterval = setInterval(() => {
-                    if(idx < steps.length) {
-                        consoleEl.innerHTML += steps[idx] + "<br>";
-                        consoleEl.scrollTop = consoleEl.scrollHeight;
-                        idx++;
-                    }
-                }, 800);
-
-            } else {
-                clearInterval(scanInterval);
-                laser.style.display = 'none';
-                points.style.display = 'none';
-                prompt.style.display = 'flex';
-                btn.innerText = "Initialize LiDAR Mesh";
-                btn.style.backgroundColor = "var(--electric-blue)";
-                consoleEl.innerHTML = "[SYSTEM READY] Scan terminated by user. Mesh cached.";
-            }
+        if (event.target.id === "modalRunScanBtn") {
+          closeModal();
+          switchView("home");
+          window.setTimeout(runSpatialScan, 220);
         }
+      });
+    }
 
-        // Run baseline load on load
-        runDiagnostics();
-    </script>
+    function init() {
+      renderWorkflow();
+      bindEvents();
+    }
+
+    init();
+  </script>
 </body>
 </html>
-
