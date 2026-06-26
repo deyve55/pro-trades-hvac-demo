@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pro Trades Academy - HVAC Diagnostic OS</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.359.0/umd/lucide.min.js"></script>
+    <style>
+        :root {
+            --bg-dark: #0f172a;
+            --panel-dark: #1e293b;
+            --safety-orange: #f97316;
+            --electric-blue: #3b82f6;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --terminal-green: #22c55e;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            padding-bottom: 70px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            background-color: var(--panel-dark);
+            padding: 1rem;
+            border-bottom: 2px solid var(--safety-orange);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .logo-container h1 {
+            font-size: 1.1rem;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+        }
+
+        .logo-container span {
+            color: var(--safety-orange);
+        }
+
+        .status-badge {
+            background: rgba(34, 197, 94, 0.1);
+            color: var(--terminal-green);
+            padding: 0.25rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-family: monospace;
+            border: 1px solid var(--terminal-green);
+        }
+
+        main {
+            padding: 1rem;
+            flex-grow: 1;
+            max-width: 600px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        .app-view {
+            display: none;
+        }
+
+        .app-view.active {
+            display: block;
+        }
+
+        .card {
+            background-color: var(--panel-dark);
+            border-radius: 8px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border: 1px solid #334155;
+        }
+
+        .card-title {
+            font-size: 1rem;
+            color: var(--text-muted);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        /* Calculator View Styles */
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .input-group {
+            margin-bottom: 1rem;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.85rem;
+            color: var(--text-muted);
+            margin-bottom: 0.35rem;
+        }
+
+        .input-group input, .input-group select {
+            width: 100%;
+            background-color: var(--bg-dark);
+            border: 1px solid #475569;
+            color: var(--text-main);
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .input-group input:focus {
+            border-color: var(--electric-blue);
+        }
+
+        .btn {
+            width: 100%;
+            background-color: var(--safety-orange);
+            color: white;
+            border: none;
+            padding: 0.85rem;
+            border-radius: 6px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .btn-blue {
+            background-color: var(--electric-blue);
+        }
+
+        .results-box {
+            background: rgba(59, 130, 246, 0.05);
+            border: 1px dashed var(--electric-blue);
+            border-radius: 6px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #334155;
+        }
+
+        .result-row:last-child {
+            border-bottom: none;
+        }
+
+        /* LiDAR Scanner View Styles */
+        .scanner-viewport {
+            height: 220px;
+            background: #020617;
+            border-radius: 6px;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid #334155;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .laser-line {
+            position: absolute;
+            width: 100%;
+            height: 2px;
+            background: var(--electric-blue);
+            box-shadow: 0 0 12px var(--electric-blue);
+            top: 0;
+            animation: scan 3s infinite linear;
+            display: none;
+        }
+
+        @keyframes scan {
+            0% { top: 0%; }
+            50% { top: 100%; }
+            100% { top: 0%; }
+        }
+
+        .point-cloud {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            opacity: 0.3;
+            background-image: radial-gradient(var(--electric-blue) 1px, transparent 1px);
+            background-size: 12px 12px;
+            display: none;
+        }
+
+        /* Terminal Console */
+        .terminal {
+            background-color: #020617;
+            font-family: monospace;
+            padding: 0.75rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            color: var(--terminal-green);
+            height: 120px;
+            overflow-y: auto;
+            border: 1px solid #1e293b;
+        }
+
+        /* Pitch Deck View Styles */
+        .pitch-slide {
+            padding: 0.5rem;
+        }
+
+        .pitch-slide h2 {
+            color: var(--safety-orange);
+            font-size: 1.3rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .pitch-slide p {
+            color: var(--text-muted);
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .highlight-box {
+            background: rgba(249, 115, 22, 0.05);
+            border-left: 4px solid var(--safety-orange);
+            padding: 0.75rem;
+            margin: 1rem 0;
+            font-weight: 600;
+        }
+
+        /* Navigation Bar */
+        nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: var(--panel-dark);
+            border-top: 1px solid #334155;
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: var(--text-muted);
+            background: none;
+            border: none;
+            font-size: 0.75rem;
+            cursor: pointer;
+            width: 25%;
+            gap: 0.25rem;
+        }
+
+        .nav-item.active {
+            color: var(--safety-orange);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo-container">
+            <h1>PRO TRADES <span>OS</span></h1>
+        </div>
+        <div class="status-badge" id="systemStatus">SYS_ONLINE</div>
+    </header>
+
+    <main>
+        <!-- CALCULATOR VIEW -->
+        <div id="calc-view" class="app-view active">
+            <div class="card">
+                <div class="card-title">
+                    <i data-lucide="calculator" style="color: var(--electric-blue)"></i> 
+                    Diagnostic Metrics
+                </div>
+                <div class="grid-2">
+                    <div class="input-group">
+                        <label>Length (ft)</label>
+                        <input type="number" id="calcLength" value="20" placeholder="0">
+                    </div>
+                    <div class="input-group">
+                        <label>Width (ft)</label>
+                        <input type="number" id="calcWidth" value="15" placeholder="0">
+                    </div>
+                </div>
+                <div class="input-group">
+                    <label>Ceiling Height (ft)</label>
+                    <input type="number" id="calcHeight" value="8" placeholder="0">
+                </div>
+                <button class="btn" onclick="runDiagnostics()">Calculate Demands</button>
+
+                <div class="results-box">
+                    <div class="result-row">
+                        <span style="color: var(--text-muted)">Space Volume:</span>
+                        <strong id="resVolume">0 cu ft</strong>
+                    </div>
+                    <div class="result-row">
+                        <span style="color: var(--text-muted)">Est. Thermal Load:</span>
+                        <strong id="resBTU" style="color: var(--safety-orange)">0 BTU</strong>
+                    </div>
+                    <div class="result-row">
+                        <span style="color: var(--text-muted)">Target Duct Size:</span>
+                        <strong id="resDuct">0" Round</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- LiDAR SCANNER VIEW -->
+        <div id="scan-view" class="app-view">
+            <div class="card">
+                <div class="card-title">
+                    <i data-lucide="scan-face" style="color: var(--electric-blue)"></i> 
+                    Spatial Telemetry
+                </div>
+                <div class="scanner-viewport">
+                    <div class="laser-line" id="laser"></div>
+                    <div class="point-cloud" id="points"></div>
+                    <div id="scanPrompt" style="text-align: center; color: var(--text-muted); z-index: 10;">
+                        <i data-lucide="aperture" style="width: 48px; height: 48px; margin-bottom: 0.5rem; color: var(--electric-blue);"></i>
+                        <p>Ready to Scan Mechanical Space</p>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; margin-bottom: 1rem;">
+                    <button class="btn btn-blue" id="scanBtn" onclick="toggleScan()">Initialize LiDAR Mesh</button>
+                </div>
+                <div class="terminal" id="termConsole">
+                    [SYSTEM READY] Awaiting hardware deployment signal...
+                </div>
+            </div>
+        </div>
+
+        <!-- PITCH DECK VIEW -->
+        <div id="pitch-view" class="app-view">
+            <div class="card pitch-slide">
+                <div class="card-title">
+                    <i data-lucide="presentation" style="color: var(--safety-orange)"></i>
+                    Executive Strategy
+                </div>
+                <h2>The Trade Scalability Gap</h2>
+                <p>Residential HVAC service is bottlenecked by manual calculations, inaccurate field scoping, and quoting friction that kills conversion rates at the kitchen table.</p>
+                
+                <div class="highlight-box">
+                    "If a software ecosystem isn't optimized for hyper-fast execution and real market feasibility, technical features do not matter."
+                </div>
+
+                <h2>The OS Solution</h2>
+                <p>Aqua Homes OS bridges high-level architecture with raw field operations—allowing a tech to model thermal demands instantly, verify clearances via spatial data, and close jobs on site.</p>
+            </div>
+        </div>
+    </main>
+
+    <nav>
+        <button class="nav-item active" onclick="switchView('calc-view', this)">
+            <i data-lucide="calculator"></i>
+            <span>Diagnostics</span>
+        </button>
+        <button class="nav-item" onclick="switchView('scan-view', this)">
+            <i data-lucide="scan"></i>
+            <span>LiDAR Space</span>
+        </button>
+        <button class="nav-item" onclick="switchView('pitch-view', this)">
+            <i data-lucide="presentation"></i>
+            <span>Pitch Deck</span>
+        </button>
+    </nav>
+
+    <script>
+        // Initialize Lucide Icons
+        lucide.createIcons();
+
+        // View Switching Logic
+        function switchView(viewId, element) {
+            document.querySelectorAll('.app-view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            
+            document.getElementById(viewId).classList.add('active');
+            element.classList.add('active');
+        }
+
+        // Live Diagnostic Calculation Math
+        function runDiagnostics() {
+            const l = parseFloat(document.getElementById('calcLength').value) || 0;
+            const w = parseFloat(document.getElementById('calcWidth').value) || 0;
+            const h = parseFloat(document.getElementById('calcHeight').value) || 0;
+
+            const volume = l * w * h;
+            // Standard baseline calculation for rough HVAC sizing rules
+            const btu = volume * 4; 
+            let ductSize = "6\" Round";
+            
+            if (btu > 12000) ductSize = "8\" Round";
+            if (btu > 24000) ductSize = "10\" Round";
+            if (btu > 36000) ductSize = "12\" Round";
+
+            document.getElementById('resVolume').innerText = volume.toLocaleString() + " cu ft";
+            document.getElementById('resBTU').innerText = btu.toLocaleString() + " BTU";
+            document.getElementById('resDuct').innerText = ductSize;
+        }
+
+        // Simulated LiDAR Animation and Terminal Logs
+        let scanning = false;
+        let scanInterval;
+
+        function toggleScan() {
+            const laser = document.getElementById('laser');
+            const points = document.getElementById('points');
+            const prompt = document.getElementById('scanPrompt');
+            const btn = document.getElementById('scanBtn');
+            const consoleEl = document.getElementById('termConsole');
+
+            scanning = !scanning;
+
+            if (scanning) {
+                laser.style.display = 'block';
+                points.style.display = 'block';
+                prompt.style.display = 'none';
+                btn.innerText = "Terminate Scan Mesh";
+                btn.style.backgroundColor = "#ef4444";
+                
+                consoleEl.innerHTML = "[INFO] Initializing field hardware sensors...<br>";
+                
+                let steps = [
+                    "[OK] Emitting LiDAR arrays...",
+                    "[DATA] Capturing spatial boundary points...",
+                    "[COMPUTE] Resolving structural obstacles...",
+                    "[SUCCESS] Mesh completed: 1,420 reference coordinates locked."
+                ];
+                let idx = 0;
+                
+                scanInterval = setInterval(() => {
+                    if(idx < steps.length) {
+                        consoleEl.innerHTML += steps[idx] + "<br>";
+                        consoleEl.scrollTop = consoleEl.scrollHeight;
+                        idx++;
+                    }
+                }, 800);
+
+            } else {
+                clearInterval(scanInterval);
+                laser.style.display = 'none';
+                points.style.display = 'none';
+                prompt.style.display = 'flex';
+                btn.innerText = "Initialize LiDAR Mesh";
+                btn.style.backgroundColor = "var(--electric-blue)";
+                consoleEl.innerHTML = "[SYSTEM READY] Scan terminated by user. Mesh cached.";
+            }
+        }
+
+        // Run baseline load on load
+        runDiagnostics();
+    </script>
+</body>
+</html>
+
