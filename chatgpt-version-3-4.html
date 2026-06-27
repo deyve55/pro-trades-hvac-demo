@@ -1,0 +1,559 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover"/>
+<title>Pro Trades Academy HVAC Diagnostic OS - V3.4 Module Map</title>
+<style>
+:root{
+  --bg:#02060b;
+  --mid:#050914;
+  --card:rgba(7,17,27,.78);
+  --blue:#00d2ff;
+  --orange:#ff4b16;
+  --steel:#9aa7b8;
+  --muted:#7e8d9f;
+  --line:rgba(0,210,255,.2);
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;
+  --mono:Consolas,"SFMono-Regular",monospace;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;background:#000;color:#fff;font-family:var(--font);overflow:hidden}
+body{display:flex;align-items:center;justify-content:center}
+button{font:inherit;cursor:pointer}
+.device{
+  width:100%;max-width:430px;height:100vh;max-height:932px;position:relative;overflow:hidden;
+  background:
+    radial-gradient(circle at 18% 10%,rgba(255,75,22,.28),transparent 28%),
+    radial-gradient(circle at 82% 12%,rgba(0,210,255,.28),transparent 32%),
+    linear-gradient(var(--bg),var(--mid) 52%,#010409);
+  box-shadow:0 0 42px rgba(0,210,255,.16),0 0 88px rgba(0,0,0,.95);
+}
+.device:before{
+  content:"";position:absolute;inset:0;
+  background:
+    linear-gradient(rgba(255,255,255,.028) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(255,255,255,.024) 1px,transparent 1px);
+  background-size:28px 28px;pointer-events:none;
+}
+.screen{position:relative;z-index:1;height:100%;overflow-y:auto;padding-bottom:86px;scrollbar-width:none}
+.screen::-webkit-scrollbar{display:none}
+.view{display:none;min-height:100%}
+.view.active{display:block}
+.statusbar{height:38px;display:flex;justify-content:space-between;padding:12px 20px 0;font-size:12px;font-weight:800}
+.hero{height:278px;text-align:center;position:relative;overflow:hidden;border-bottom:1px solid rgba(0,210,255,.14)}
+.hero:before{
+  content:"";position:absolute;inset:0;
+  background:
+    radial-gradient(circle at 24% 38%,rgba(255,75,22,.32),transparent 24%),
+    radial-gradient(circle at 76% 36%,rgba(0,210,255,.32),transparent 26%),
+    repeating-radial-gradient(circle at 22% 35%,rgba(255,75,22,.15) 0 1px,transparent 1px 9px),
+    repeating-radial-gradient(circle at 78% 34%,rgba(0,210,255,.14) 0 1px,transparent 1px 9px);
+}
+.logo{position:relative;z-index:2;width:174px;height:174px;margin:4px auto 0}
+.rail{position:absolute;inset:-15px;border-radius:50%;filter:drop-shadow(0 0 12px currentColor)}
+.rail.orange{color:var(--orange);border-left:4px solid var(--orange);border-top:2px solid rgba(255,75,22,.42);transform:rotate(13deg)}
+.rail.blue{color:var(--blue);border-right:4px solid var(--blue);border-top:2px solid rgba(0,210,255,.4);transform:rotate(13deg)}
+.badge{position:absolute;inset:13px;border-radius:50%;background:#fff;color:#080b10;display:flex;flex-direction:column;align-items:center;justify-content:center;box-shadow:0 0 0 1px rgba(255,255,255,.38),0 0 24px rgba(0,0,0,.28)}
+.tp{font-family:Arial Black,Impact,sans-serif;font-size:53px;line-height:.72;letter-spacing:-12px}
+.tp .t{color:var(--orange)}
+.tp .p{color:#080b10}
+.pro{font-family:Arial Black,Impact,sans-serif;font-size:21px;margin-top:9px}
+.pro span{color:var(--orange)}
+.acad{font-size:22px;font-weight:300;letter-spacing:.04em}
+.hero-title{position:relative;z-index:2;margin-top:10px;font-size:23px;font-weight:1000;letter-spacing:.1em;text-transform:uppercase}
+.hero-title span{color:var(--orange);text-shadow:0 0 14px rgba(255,75,22,.45)}
+.hero-sub{position:relative;z-index:2;margin-top:5px;color:#c7d0db;font-size:11px;font-weight:800;letter-spacing:.16em}
+.loading{position:relative;z-index:2;width:170px;height:8px;margin:15px auto 8px;border-radius:999px;background:#172637;overflow:hidden}
+.loading:before{content:"";position:absolute;left:0;top:0;width:65%;height:100%;background:linear-gradient(90deg,#ff2a12,#ff6a00);box-shadow:0 0 16px rgba(255,75,22,.75)}
+.loading:after{content:"";position:absolute;top:0;width:5px;height:100%;background:#fff;box-shadow:0 0 9px #fff;animation:slide 2.2s linear infinite}
+@keyframes slide{0%{left:5%}50%{left:66%}100%{left:5%}}
+.init{position:relative;z-index:2;color:#bac4d1;font-size:12px;animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:.55}50%{opacity:1}}
+.header{height:74px;display:grid;grid-template-columns:50px 60px 1fr 90px;align-items:center;padding:0 12px;background:rgba(5,9,20,.88);border-top:1px solid rgba(255,255,255,.08);border-bottom:1px solid rgba(0,210,255,.22);backdrop-filter:blur(16px)}
+.icon{border:0;background:transparent;color:#fff;min-width:42px;min-height:42px;border-radius:14px;display:flex;align-items:center;justify-content:center}
+.icon:active{background:rgba(0,210,255,.12)}
+.hamb{font-size:31px}
+.mini{font-family:Arial Black,Impact,sans-serif;font-size:41px;line-height:1;letter-spacing:-9px}
+.mini .t{color:var(--orange)}
+.copy strong{display:block;font-size:19px;line-height:1.05}
+.copy span{display:block;color:var(--blue);font-size:13px;font-weight:900;margin-top:5px}
+.actions{display:flex;justify-content:flex-end;gap:10px}
+.bell{font-size:26px;position:relative}
+.bell:after{content:"";position:absolute;right:3px;top:6px;width:8px;height:8px;border-radius:50%;background:var(--orange);box-shadow:0 0 12px rgba(255,75,22,.9)}
+.avatar{width:42px;height:42px;border-radius:50%;border:1px solid rgba(0,210,255,.72);box-shadow:0 0 14px rgba(0,210,255,.32)}
+.content{padding:14px 8px 0}
+.glass{border:1px solid var(--line);background:linear-gradient(135deg,rgba(7,17,27,.83),rgba(2,7,13,.9));backdrop-filter:blur(16px);border-radius:22px;box-shadow:inset 0 0 32px rgba(0,210,255,.055),0 0 14px rgba(0,0,0,.48)}
+.core{min-height:164px;padding:18px 14px;position:relative;overflow:hidden}
+.core h1{font-size:23px;margin-bottom:12px}
+.core p{max-width:240px;color:#c4ccd7;font-size:14px;line-height:1.42}
+.primary{border:0;margin-top:15px;min-width:190px;height:48px;border-radius:13px;background:linear-gradient(#ff641c,#ff2d10);color:#fff;font-size:15px;font-weight:1000;box-shadow:0 0 17px rgba(255,75,22,.48)}
+.title-row{display:flex;justify-content:space-between;align-items:center;margin:15px 4px 8px}
+.title-row h2{font-size:14px;font-weight:1000;letter-spacing:.08em;text-transform:uppercase;border-left:4px solid var(--orange);padding-left:10px}
+.title-row small{color:#aab4c2;font-size:11px}
+.launcher{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.module-btn{min-height:62px;border:1px solid rgba(0,210,255,.24);background:linear-gradient(135deg,rgba(7,17,27,.83),rgba(2,7,13,.9));color:#fff;border-radius:16px;padding:10px;text-align:left;font-weight:1000;box-shadow:inset 0 0 18px rgba(0,210,255,.04)}
+.module-btn span{display:block;color:var(--blue);font-size:10px;margin-top:4px;font-weight:800;line-height:1.2}
+.module-btn.orange{border-color:rgba(255,75,22,.34)}
+.module-btn.orange span{color:var(--orange)}
+.module-btn:active{transform:scale(.985);filter:brightness(1.15)}
+.category{padding:12px;margin-bottom:10px}
+.category h3{font-size:16px;margin-bottom:8px;color:#fff}
+.category p{font-size:12px;color:#aeb8c5;line-height:1.4;margin-bottom:10px}
+.terminal{margin-top:11px;min-height:126px;padding:13px;font:11.5px/1.5 var(--mono);border-left:2px solid var(--orange)}
+.log-blue{color:var(--blue)}
+.log-orange{color:var(--orange)}
+.log-yellow{color:#ffdd6b}
+.log-green{color:#50ff43}
+.log-text{color:#e4eaf2}
+.radar{height:226px;border-radius:18px;border:1px solid rgba(0,210,255,.25);position:relative;overflow:hidden;background:radial-gradient(circle at center,rgba(0,210,255,.12),transparent 34%),linear-gradient(rgba(0,210,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(0,210,255,.07) 1px,transparent 1px),#02070d;background-size:100% 100%,24px 24px,24px 24px}
+.radar:before{content:"";position:absolute;width:250px;height:250px;border-radius:50%;left:50%;top:50%;transform:translate(-50%,-50%);border:1px solid rgba(0,210,255,.24)}
+.radar:after{content:"";position:absolute;left:50%;top:50%;width:150px;height:2px;transform-origin:left center;background:linear-gradient(90deg,var(--blue),transparent);animation:radar 2.2s linear infinite;box-shadow:0 0 16px var(--blue)}
+@keyframes radar{to{transform:rotate(360deg)}}
+.progress{height:13px;border-radius:99px;background:#13202e;overflow:hidden;margin-top:10px}
+.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--orange),#fff,var(--blue));transition:width .16s linear}
+.cycle-card{padding:13px}
+.cycle-svg{width:100%;height:300px;display:block;border:1px solid rgba(0,210,255,.18);border-radius:18px;background:radial-gradient(circle at center,rgba(0,210,255,.08),transparent 42%),rgba(255,255,255,.035)}
+.flow-hot{stroke:var(--orange);stroke-width:7;fill:none;stroke-linecap:round;stroke-dasharray:14 12;animation:flow 1.1s linear infinite;filter:drop-shadow(0 0 8px rgba(255,75,22,.8))}
+.flow-cold{stroke:var(--blue);stroke-width:7;fill:none;stroke-linecap:round;stroke-dasharray:14 12;animation:flow 1.1s linear infinite;filter:drop-shadow(0 0 8px rgba(0,210,255,.8))}
+@keyframes flow{to{stroke-dashoffset:-52}}
+.comp{fill:rgba(255,255,255,.05);stroke:rgba(0,210,255,.55);stroke-width:2}
+.comp.hot{stroke:rgba(255,75,22,.75)}
+.cycle-label{font:700 10px Arial;fill:#fff;letter-spacing:.06em}
+.cycle-small{font:9px Arial;fill:#aeb8c5}
+.state-box{margin-top:10px;padding:12px;border-radius:16px;border-left:2px solid var(--orange);background:rgba(255,255,255,.045);font-size:13px;color:#dce6ef;line-height:1.45}
+.notice{padding:12px;border-radius:16px;border:1px solid rgba(255,75,22,.22);background:rgba(255,75,22,.06);font-size:12px;color:#f2d4c8;line-height:1.4;margin-top:10px}
+.nav{position:absolute;left:0;right:0;bottom:0;height:78px;z-index:20;display:grid;grid-template-columns:repeat(5,1fr);background:linear-gradient(rgba(5,12,20,.72),rgba(3,7,12,.98));border-top:1px solid rgba(0,210,255,.18);backdrop-filter:blur(18px)}
+.nav button{border:0;background:transparent;color:#8995a5;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11px;font-weight:800}
+.nav button.active{color:var(--orange)}
+.drawer{position:absolute;z-index:45;left:-292px;top:0;width:282px;height:100%;background:rgba(4,9,17,.96);backdrop-filter:blur(18px);border-right:1px solid rgba(0,210,255,.22);padding:24px 16px;transition:left .25s ease}
+.drawer.open{left:0}
+.drawer h3{font-size:19px;margin-bottom:8px}
+.drawer p{color:#aeb8c5;font-size:12px;line-height:1.35;margin-bottom:12px}
+.drawer button{width:100%;padding:13px;margin:8px 0;text-align:left;border-radius:13px;border:1px solid rgba(255,255,255,.09);color:#fff;background:rgba(255,255,255,.045)}
+.panel{position:absolute;z-index:50;right:12px;top:92px;width:305px;display:none;border:1px solid rgba(0,210,255,.24);background:rgba(4,9,17,.96);backdrop-filter:blur(18px);border-radius:18px;padding:15px}
+.panel.open{display:block}
+.panel h3{font-size:18px;margin-bottom:8px}
+.panel p{color:#b8c3cf;font-size:13px;line-height:1.42}
+.panel button{width:100%;height:38px;margin-top:13px;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(255,255,255,.12);color:#fff}
+.toast{position:absolute;z-index:90;left:50%;bottom:88px;transform:translateX(-50%) translateY(88px);width:min(388px,calc(100% - 24px));padding:12px 16px;border-radius:14px;background:rgba(6,14,26,.98);border:1px solid var(--blue);text-align:center;font-weight:900;font-size:13px;opacity:0;transition:.24s ease}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.toast.orange{border-color:var(--orange)}
+@media(max-width:390px){
+  .hero-title{font-size:21px}
+  .copy strong{font-size:17px}
+  .header{grid-template-columns:46px 54px 1fr 84px}
+  .cycle-svg{height:270px}
+}
+</style>
+</head>
+<body>
+<div class="device">
+  <aside class="drawer" id="drawer">
+    <h3>Pro Trades Command</h3>
+    <p>V3.4 clean module map. Only partial scan works. Other modules are placeholders.</p>
+    <button data-go="home">Home Dashboard</button>
+    <button data-go="scan">Partial Scan</button>
+    <button data-go="modules">Module Map</button>
+    <button data-go="cycle">How AC Works</button>
+    <button data-go="training">Student / Expert</button>
+  </aside>
+
+  <section class="panel" id="panel">
+    <h3 id="panelTitle">Placeholder Module</h3>
+    <p id="panelText">This module is parked for future build.</p>
+    <button onclick="closePanel()">Close</button>
+  </section>
+
+  <div class="screen">
+    <section class="view active" id="homeView">
+      <div class="statusbar"><div>9:41</div><div>▮▮▮ ))) ▭</div></div>
+
+      <section class="hero">
+        <div class="logo">
+          <div class="rail orange"></div>
+          <div class="rail blue"></div>
+          <div class="badge">
+            <div class="tp"><span class="t">T</span><span class="p">P</span></div>
+            <div class="pro">PRO <span>TRADES</span></div>
+            <div class="acad">ACADEMY™</div>
+          </div>
+        </div>
+        <div class="hero-title">HVAC <span>MODULE</span> OS</div>
+        <div class="hero-sub">CLEAN MAP. ONE MODULE AT A TIME.</div>
+        <div class="loading"></div>
+        <div class="init">Initializing clean HVAC module library...</div>
+      </section>
+
+      <header class="header">
+        <button class="icon hamb" onclick="toggleDrawer()">☰</button>
+        <div class="mini"><span class="t">T</span><span>P</span></div>
+        <div class="copy"><strong>Pro Trades Academy</strong><span>V3.4 Module Map</span></div>
+        <div class="actions">
+          <button class="icon bell" onclick="openPanel('Build Rule','Only Partial Scan is functional. All other modules are placeholders until approved.')">♧</button>
+          <button class="icon avatar" onclick="openPanel('Technician Modes','Student, Expert, Instructor, and Owner modules are parked as placeholders.')"></button>
+        </div>
+      </header>
+
+      <main class="content">
+        <section class="glass core">
+          <h1>Clean HVAC Module Foundation</h1>
+          <p>All HVAC modules are mapped as visible placeholder buttons. We will activate one module at a time so the app does not get jumbled.</p>
+          <button class="primary" onclick="go('scan')">Run Partial Scan</button>
+        </section>
+
+        <div class="title-row"><h2>Approved Core</h2><small>Only scan works</small></div>
+
+        <div class="launcher">
+          <button class="module-btn orange" onclick="go('scan')">Partial Scan<span>Functional baseline</span></button>
+          <button class="module-btn" onclick="go('modules')">HVAC Module Map<span>All buttons parked</span></button>
+          <button class="module-btn orange" onclick="go('cycle')">How AC Works<span>Animated visual</span></button>
+          <button class="module-btn" onclick="go('training')">Student / Expert<span>Learning modes</span></button>
+        </div>
+
+        <section class="glass terminal">
+          <div id="globalLog">
+            <div><span class="log-blue">[SYSTEM]:</span> <span class="log-text">V3.4 clean module map loaded.</span></div>
+            <div><span class="log-orange">[RULE]:</span> <span class="log-text">No fake calculators. No fake module functionality. Placeholders only.</span></div>
+            <div><span class="log-green">[ACTIVE]:</span> <span class="log-text">Partial Scan remains functional.</span></div>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <section class="view" id="scanView">
+      <header class="header">
+        <button class="icon hamb" onclick="toggleDrawer()">☰</button>
+        <div class="mini"><span class="t">T</span><span>P</span></div>
+        <div class="copy"><strong>Partial Scan</strong><span>Only active workflow</span></div>
+        <div class="actions"><button class="icon bell" onclick="openPanel('Scan Note','This partial scan is the only functional module in V3.4.')">♧</button><button class="icon avatar"></button></div>
+      </header>
+
+      <main class="content">
+        <div class="title-row"><h2>Partial Scan</h2><small id="scanPercent">0%</small></div>
+        <section class="glass category">
+          <p>This is the only working workflow. Everything else is parked as a module shell.</p>
+          <div class="radar"></div>
+          <div class="progress"><span id="scanBar"></span></div>
+          <div class="launcher" style="margin-top:10px">
+            <button class="module-btn orange" onclick="runPartialScan()">Run Partial Scan<span>Active workflow</span></button>
+            <button class="module-btn" onclick="resetPartialScan()">Reset Scan<span>Clear progress</span></button>
+          </div>
+        </section>
+        <section class="glass terminal">
+          <div id="scanLog"><div><span class="log-blue">[READY]:</span> <span class="log-text">Partial scan standing by.</span></div></div>
+        </section>
+      </main>
+    </section>
+
+    <section class="view" id="modulesView">
+      <header class="header">
+        <button class="icon hamb" onclick="toggleDrawer()">☰</button>
+        <div class="mini"><span class="t">T</span><span>P</span></div>
+        <div class="copy"><strong>HVAC Module Map</strong><span>Placeholders only</span></div>
+        <div class="actions"><button class="icon bell" onclick="openPanel('Placeholder Rule','Every button parks a future module. Nothing calculates yet.')">♧</button><button class="icon avatar"></button></div>
+      </header>
+
+      <main class="content">
+        <div class="notice">These are intentionally dead placeholders. Clicking opens a parked-module note only. We will activate them one by one.</div>
+
+        <div class="title-row"><h2>Load / Design</h2><small>ACCA</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn orange" onclick="placeholder('Manual J Load Calculator','Future room-by-room load module.')">Manual J Load<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Manual S Equipment Sizing','Future equipment match module.')">Manual S Sizing<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Manual D Duct Design','Future duct design module.')">Manual D Duct<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Room-by-Room Load','Future room load breakdown.')">Room Load<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Heat Gain / Heat Loss','Future heating and cooling load logic.')">Heat Gain/Loss<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Equipment Selection','Future AHRI/model match module.')">Equipment Select<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>Refrigerant / Charge</h2><small>Diagnostics</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn orange" onclick="placeholder('Superheat Diagnostic','Future suction-side diagnostic module.')">Superheat<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Subcooling Diagnostic','Future liquid-side diagnostic module.')">Subcooling<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Refrigerant Pressure Chart','Future refrigerant pressure/temperature module.')">PT Chart<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Refrigerant Charging','Future charge correction workflow.')">Charging<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Leak Detection','Future leak diagnostic workflow.')">Leak Detection<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Recovery / Vacuum / Microns','Future evacuation and vacuum workflow.')">Vacuum/Microns<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>Airflow / Duct</h2><small>Performance</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn" onclick="placeholder('Static Pressure','Future return/supply static module.')">Static Pressure<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('CFM Calculator','Future airflow calculation module.')">CFM<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Delta T Temperature Split','Future return/supply temperature diagnostic.')">Delta T<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Duct Sizing','Future trunk/branch sizing module.')">Duct Sizing<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Blower / Fan Speed','Future blower speed diagnostics.')">Blower Speed<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Filter / Return Restriction','Future restriction diagnostic.')">Return Restriction<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>Electrical / Controls</h2><small>Testing</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn orange" onclick="placeholder('Ohms / Volts / Amps / Watts','Future electrical law module.')">Ohms/Volts<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Capacitor Testing','Future capacitor diagnostic module.')">Capacitor<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Contactor / Relay','Future contactor and relay workflow.')">Contactor<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Transformer / Low Voltage','Future 24V control diagnostic.')">Transformer<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Thermostat / Wiring','Future thermostat and wiring module.')">Thermostat<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Compressor Electrical','Future LRA/RLA/winding diagnostic.')">Compressor Elec.<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>Equipment / Components</h2><small>Hardware</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn" onclick="placeholder('Compressor','Future compressor diagnostic module.')">Compressor<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Condenser Coil','Future condenser coil module.')">Condenser Coil<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Evaporator Coil','Future evaporator coil module.')">Evaporator Coil<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('TXV / Metering Device','Future metering device diagnostic.')">TXV / Metering<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Reversing Valve','Future heat pump reversing valve module.')">Reversing Valve<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Defrost Board','Future heat pump defrost module.')">Defrost Board<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>Heating / Fuel</h2><small>Furnace</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn orange" onclick="placeholder('Gas Furnace Sequence','Future furnace sequence module.')">Furnace Sequence<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Flame Sensor / Ignition','Future ignition diagnostic.')">Ignition<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Gas Pressure','Future manifold/inlet pressure module.')">Gas Pressure<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Heat Exchanger Safety','Future heat exchanger warning module.')">Heat Exchanger<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Limit Switch / Rollout','Future safety switch module.')">Limit/Rollout<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Combustion Analysis','Future combustion analyzer workflow.')">Combustion<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>Hydronics / Boiler</h2><small>Heating</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn" onclick="placeholder('Boiler Diagnostics','Future boiler module.')">Boiler<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Circulator / Pump','Future pump diagnostic.')">Circulator<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Zone Valve','Future zone valve module.')">Zone Valve<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Expansion Tank','Future hydronic pressure module.')">Expansion Tank<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>IAQ / Comfort</h2><small>Indoor Air</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn orange" onclick="placeholder('Humidity / Dehumidification','Future humidity module.')">Humidity<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Ventilation / ERV / HRV','Future ventilation module.')">Ventilation<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Zoning / Dampers','Future zoning module.')">Zoning<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Comfort Complaint','Future comfort diagnostic.')">Comfort Issue<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <div class="title-row"><h2>Field / Reports</h2><small>Workflow</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn" onclick="placeholder('Equipment Label Scanner','Future Gemini Vision label scanner.')">Label Scanner<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Photo Field Capture','Future photo/evidence module.')">Photo Capture<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Customer Report','Future customer summary builder.')">Customer Report<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Service Ticket','Future work order module.')">Service Ticket<span>Placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Parts / Materials','Future parts list module.')">Parts List<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Estimate Builder','Future quote/estimate module.')">Estimate<span>Placeholder</span></button>
+          </div>
+        </section>
+      </main>
+    </section>
+
+    <section class="view" id="cycleView">
+      <header class="header">
+        <button class="icon hamb" onclick="toggleDrawer()">☰</button>
+        <div class="mini"><span class="t">T</span><span>P</span></div>
+        <div class="copy"><strong>How AC Works</strong><span>Animated cycle visual</span></div>
+        <div class="actions"><button class="icon bell" onclick="openPanel('AC Cycle','This visual is active, but not calculating anything.')">♧</button><button class="icon avatar"></button></div>
+      </header>
+
+      <main class="content">
+        <section class="glass cycle-card">
+          <svg class="cycle-svg" viewBox="0 0 400 320" aria-label="Animated refrigeration cycle">
+            <defs>
+              <marker id="arrowHot" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L7,3 z" fill="#ff4b16"/>
+              </marker>
+              <marker id="arrowCold" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L0,6 L7,3 z" fill="#00d2ff"/>
+              </marker>
+            </defs>
+
+            <path class="flow-hot" d="M98 78 C142 34 258 34 302 78" marker-end="url(#arrowHot)"/>
+            <path class="flow-hot" d="M326 105 C354 138 354 180 326 213" marker-end="url(#arrowHot)"/>
+            <path class="flow-cold" d="M302 236 C258 282 142 282 98 236" marker-end="url(#arrowCold)"/>
+            <path class="flow-cold" d="M74 213 C46 180 46 138 74 105" marker-end="url(#arrowCold)"/>
+
+            <rect class="comp hot" x="40" y="52" width="116" height="64" rx="17"/>
+            <text x="98" y="82" text-anchor="middle" class="cycle-label">COMPRESSOR</text>
+            <text x="98" y="101" text-anchor="middle" class="cycle-small">LOW GAS → HIGH-P VAPOR</text>
+
+            <rect class="comp hot" x="244" y="52" width="116" height="64" rx="17"/>
+            <text x="302" y="82" text-anchor="middle" class="cycle-label">CONDENSER</text>
+            <text x="302" y="101" text-anchor="middle" class="cycle-small">HOT GAS → LIQUID</text>
+
+            <rect class="comp" x="244" y="204" width="116" height="64" rx="17"/>
+            <text x="302" y="234" text-anchor="middle" class="cycle-label">EXPANSION VALVE</text>
+            <text x="302" y="253" text-anchor="middle" class="cycle-small">LIQUID PRESSURE DROP</text>
+
+            <rect class="comp" x="40" y="204" width="116" height="64" rx="17"/>
+            <text x="98" y="234" text-anchor="middle" class="cycle-label">EVAPORATOR</text>
+            <text x="98" y="253" text-anchor="middle" class="cycle-small">COLD LIQUID → GAS</text>
+
+            <text x="200" y="151" text-anchor="middle" fill="#ffffff" font-size="12" font-weight="800">REFRIGERATION LOOP</text>
+            <text x="200" y="170" text-anchor="middle" fill="#9aa7b8" font-size="10">Orange = hot/high side • Blue = cold/low side</text>
+            <text x="200" y="188" text-anchor="middle" fill="#9aa7b8" font-size="10">Heat rejected outside • Heat absorbed inside</text>
+          </svg>
+
+          <div class="state-box">
+            <b>Cycle explanation:</b> Compressor raises refrigerant pressure and temperature. Condenser rejects heat and turns hot vapor into liquid. Expansion valve drops pressure. Evaporator absorbs indoor heat and boils refrigerant back into gas. The gas returns to the compressor and the loop repeats.
+          </div>
+
+          <div class="notice">This is a visual learning module only. No calculator is active here yet.</div>
+        </section>
+      </main>
+    </section>
+
+    <section class="view" id="trainingView">
+      <header class="header">
+        <button class="icon hamb" onclick="toggleDrawer()">☰</button>
+        <div class="mini"><span class="t">T</span><span>P</span></div>
+        <div class="copy"><strong>Training Modes</strong><span>Placeholders</span></div>
+        <div class="actions"><button class="icon bell" onclick="openPanel('Training Modes','These are placeholder paths for different user levels.')">♧</button><button class="icon avatar"></button></div>
+      </header>
+
+      <main class="content">
+        <div class="title-row"><h2>Learning Paths</h2><small>Parked modules</small></div>
+        <section class="glass category">
+          <div class="launcher">
+            <button class="module-btn orange" onclick="placeholder('New Technician / Student Mode','Future guided step-by-step workflow with definitions and coaching.')">New Tech / Student<span>Guided learning placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Experienced Technician Mode','Future fast diagnostics, shortcuts, and advanced summaries.')">Expert Technician<span>Fast workflow placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('Instructor Mode','Future classroom scenarios, grading, and training packs.')">Instructor Mode<span>Academy placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('Company Owner / Service Manager','Future review, reports, team, and job oversight.')">Owner / Manager<span>Operations placeholder</span></button>
+            <button class="module-btn" onclick="placeholder('AI Tutor','Future explanation engine for students.')">AI Tutor<span>Placeholder</span></button>
+            <button class="module-btn orange" onclick="placeholder('AI Expert Assistant','Future advanced technician diagnostic assistant.')">AI Expert<span>Placeholder</span></button>
+          </div>
+        </section>
+
+        <section class="glass terminal">
+          <div>
+            <div><span class="log-blue">[TRAINING]:</span> <span class="log-text">Student, expert, instructor, and owner modules are mapped.</span></div>
+            <div><span class="log-orange">[RULE]:</span> <span class="log-text">No training logic is active until module is approved.</span></div>
+          </div>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <nav class="nav">
+    <button class="active" data-go="home"><span>⌂</span><span>Home</span></button>
+    <button data-go="scan"><span>◉</span><span>Scan</span></button>
+    <button data-go="modules"><span>⚒</span><span>Modules</span></button>
+    <button data-go="cycle"><span>↻</span><span>Cycle</span></button>
+    <button data-go="training"><span>▱</span><span>Training</span></button>
+  </nav>
+
+  <div class="toast" id="toast">Ready</div>
+</div>
+
+<script>
+const views = {
+  home: document.getElementById("homeView"),
+  scan: document.getElementById("scanView"),
+  modules: document.getElementById("modulesView"),
+  cycle: document.getElementById("cycleView"),
+  training: document.getElementById("trainingView")
+};
+
+const navItems = Array.from(document.querySelectorAll(".nav button"));
+let scanTimer = null;
+
+navItems.forEach(item => item.addEventListener("click", () => go(item.dataset.go)));
+document.querySelectorAll(".drawer [data-go]").forEach(button => button.addEventListener("click", () => go(button.dataset.go)));
+
+function go(viewName) {
+  Object.values(views).forEach(view => view.classList.remove("active"));
+  views[viewName].classList.add("active");
+  navItems.forEach(item => item.classList.toggle("active", item.dataset.go === viewName));
+  document.getElementById("drawer").classList.remove("open");
+  closePanel(false);
+  toast(viewName.charAt(0).toUpperCase() + viewName.slice(1));
+}
+
+function runPartialScan() {
+  const bar = document.getElementById("scanBar");
+  const percent = document.getElementById("scanPercent");
+  const log = document.getElementById("scanLog");
+  clearInterval(scanTimer);
+  bar.style.width = "0%";
+  percent.textContent = "0%";
+  log.innerHTML = '<div><span class="log-blue">[READY]:</span> <span class="log-text">Partial scan initialized.</span></div>';
+
+  const updates = [
+    { p: 25, t: "Room perimeter reference started." },
+    { p: 50, t: "Basic zone volume placeholder captured." },
+    { p: 75, t: "Diagnostic shell is ready for future module connection." },
+    { p: 100, t: "Partial scan complete. No fake calculation performed." }
+  ];
+
+  let i = 0;
+  scanTimer = setInterval(() => {
+    const update = updates[i];
+    bar.style.width = update.p + "%";
+    percent.textContent = update.p + "%";
+    log.insertAdjacentHTML("beforeend", '<div><span class="log-orange">[SCAN]:</span> <span class="log-text">' + update.t + '</span></div>');
+    i++;
+    if (i >= updates.length) {
+      clearInterval(scanTimer);
+      toast("Partial scan complete", true);
+    }
+  }, 650);
+}
+
+function resetPartialScan() {
+  clearInterval(scanTimer);
+  document.getElementById("scanBar").style.width = "0%";
+  document.getElementById("scanPercent").textContent = "0%";
+  document.getElementById("scanLog").innerHTML = '<div><span class="log-blue">[READY]:</span> <span class="log-text">Partial scan reset.</span></div>';
+  toast("Partial scan reset");
+}
+
+function placeholder(title, description) {
+  document.getElementById("panelTitle").textContent = title;
+  document.getElementById("panelText").textContent = description + " This is a dead placeholder for now. It will not calculate, diagnose, or navigate until you approve this module for build.";
+  document.getElementById("panel").classList.add("open");
+  toast(title + " placeholder", true);
+}
+
+function toggleDrawer() {
+  document.getElementById("drawer").classList.toggle("open");
+}
+
+function openPanel(title, text) {
+  document.getElementById("panelTitle").textContent = title;
+  document.getElementById("panelText").textContent = text;
+  document.getElementById("panel").classList.add("open");
+  toast(title);
+}
+
+function closePanel(showToast = true) {
+  document.getElementById("panel").classList.remove("open");
+  if (showToast) toast("Panel closed");
+}
+
+function toast(message, orange = false) {
+  const el = document.getElementById("toast");
+  el.textContent = message;
+  el.className = "toast" + (orange ? " orange" : "");
+  requestAnimationFrame(() => el.classList.add("show"));
+  clearTimeout(window.toastTimer);
+  window.toastTimer = setTimeout(() => el.classList.remove("show"), 2000);
+  if (navigator.vibrate) navigator.vibrate(10);
+}
+</script>
+</body>
+</html>
