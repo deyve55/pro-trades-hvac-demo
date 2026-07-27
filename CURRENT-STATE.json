@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0.0",
+  "state_id": "REF-PRO-TRADES-HVAC-001-CURRENT-STATE-2026-07-26",
+  "status": "PHASE_4_CONTINUITY_CANDIDATE_NOT_MERGED",
+  "owner_and_final_human_authority": "Dave (Deyve)",
+  "project": {
+    "id": "REF-PRO-TRADES-HVAC-001",
+    "official_name": "Pro Trades HVAC Demo — Historical Reference",
+    "repository": "deyve55/pro-trades-hvac-demo",
+    "classification": "HISTORICAL_REFERENCE_UNLESS_DAVE_REACTIVATES"
+  },
+  "source_snapshot": {
+    "branch": "aqua-website-build",
+    "commit_sha": "f84452926265040fcbbd4572437618f37a70c54c",
+    "captured_local_date": "2026-07-26",
+    "immutable_description_target": true
+  },
+  "continuity": {
+    "branch": "recovery/phase-4-continuity-contract-20260726",
+    "agents_path": "AGENTS.md",
+    "handoff_path": "docs/handoffs/MASTER-PROJECT-HANDOFF.md",
+    "handoff_blob_sha": "a183143c78ca2f35382c1ff72fe8e97bebaf7d80",
+    "handoff_size_bytes": 11731,
+    "handoff_sha256": "876f66f697bb4c31b6ab2f9690c402b1588b6b81a35093d39907442b817d0a8f",
+    "continuity_parent_commit_sha": "b2184d8b0bb26fa6fe787e9a7f82bf9b3f5f443b",
+    "current_state_commit_sha": "SELF_REFERENCE_NOT_RECORDED; VERIFY BRANCH HEAD OR PR HEAD",
+    "one_active_handoff": true,
+    "update_required_after_every_meaningful_checkpoint": true,
+    "competing_current_handoffs_forbidden": true
+  },
+  "golden_goose_pin": {
+    "repository": "deyve55/Golden-goose-engineering-manual-",
+    "branch": "recovery/phase-3-golden-goose-reconciliation-20260726",
+    "commit_sha": "114ab91c4038422181ba68029173ddc8aecd5e32",
+    "manual_path": "governance/GOLDEN-GOOSE-ENGINEERING-MANUAL.md",
+    "manual_version": "1.2.1-REPOSITORY-IMPORT-01",
+    "manifest_path": "registry/AQUA-ECOSYSTEM-OPERATIONAL-MANIFEST.json",
+    "status": "PHASE_3_RECONCILIATION_CANDIDATE_NOT_CANONICAL"
+  },
+  "version": {
+    "app_version": "1.0.0 historical package",
+    "version_code_or_build_number": null
+  },
+  "pull_request": {
+    "number": null,
+    "state": "NONE_FOR_SOURCE_BRANCH",
+    "note": "No open PR."
+  },
+  "pull_request_note": "No open PR.",
+  "verification": {
+    "application_source_changed_by_phase_4": false,
+    "local_tests_run_by_phase_4": false,
+    "source_files_read": true,
+    "repository_metadata_verified": true,
+    "ci_runs": [],
+    "artifacts": [],
+    "physical_device_status": "NOT AN ACTIVE PRODUCT",
+    "live_deployment_changed_by_phase_4": false
+  },
+  "cross_app_relationships": [],
+  "truth_states": {
+    "preserved": true,
+    "implemented": "SOURCE_BRANCH_EXISTS",
+    "ci_verified": false,
+    "artifact_produced": false,
+    "physically_verified": false,
+    "accepted_releasable": false,
+    "live_deployed": false,
+    "canonical": false
+  },
+  "blockers": [
+    "branch diverged from main",
+    "no active commercial role or deployment verified"
+  ],
+  "latest_owner_direction": "Keep Golden Goose as the engineering constitution/software-company operating system; require each app repository to update its one handoff and machine state continuously; keep app work isolated; monthly Gemini–Codex review; Claude remains inactive until Dave explicitly activates a three-model workflow.",
+  "exact_next_action": "No development. If Dave reactivates it, first compare with active website and define a new role.",
+  "required_update_triggers": [
+    "source branch or commit",
+    "app version/build number",
+    "pull request",
+    "tests/workflow",
+    "artifact/checksum/release",
+    "deployment",
+    "physical device or field result",
+    "known defect or blocker",
+    "Golden Goose or SDK adoption",
+    "exact next action"
+  ],
+  "safety": {
+    "secrets_committed": false,
+    "application_code_changed_by_phase_4": false,
+    "merge_performed": false,
+    "deployment_performed": false,
+    "phase_one_recovery_anchor_mutated": false
+  }
+}
